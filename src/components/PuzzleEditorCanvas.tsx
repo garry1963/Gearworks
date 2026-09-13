@@ -513,25 +513,36 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
         }
       }
 
+      // Check active drag to override visual positions
+      const currentDrag = dragRef.current;
+
       // Draw Obstacles
       for (const obs of obstacles) {
+        const isDragging = currentDrag && currentDrag.type === 'obstacle' && currentDrag.id === obs.id;
+        const isResizing = currentDrag && currentDrag.type === 'obstacle-resize' && currentDrag.id === obs.id;
+        
+        const renderX = isDragging ? currentDrag.currentX : obs.x;
+        const renderY = isDragging ? currentDrag.currentY : obs.y;
+        const renderW = isResizing ? currentDrag.currentW : (isDragging ? currentDrag.originW : obs.width);
+        const renderH = isResizing ? currentDrag.currentH : (isDragging ? currentDrag.originH : obs.height);
+
         const isSelected = selectedType === 'obstacle' && selectedId === obs.id;
         ctx.save();
         ctx.fillStyle = '#1e293b';
-        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        ctx.fillRect(renderX, renderY, renderW, renderH);
 
         // Hazard Stripes
         ctx.save();
         ctx.beginPath();
-        ctx.rect(obs.x, obs.y, obs.width, obs.height);
+        ctx.rect(renderX, renderY, renderW, renderH);
         ctx.clip();
         ctx.strokeStyle = 'rgba(234, 179, 8, 0.25)';
         ctx.lineWidth = 10;
         const stripeStep = 24;
-        for (let sx = -obs.height; sx < obs.width + obs.height; sx += stripeStep) {
+        for (let sx = -renderH; sx < renderW + renderH; sx += stripeStep) {
           ctx.beginPath();
-          ctx.moveTo(obs.x + sx, obs.y);
-          ctx.lineTo(obs.x + sx + obs.height, obs.y + obs.height);
+          ctx.moveTo(renderX + sx, renderY);
+          ctx.lineTo(renderX + sx + renderH, renderY + renderH);
           ctx.stroke();
         }
         ctx.restore();
@@ -539,12 +550,12 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
         // Border
         ctx.strokeStyle = isSelected ? '#38bdf8' : '#475569';
         ctx.lineWidth = isSelected ? 2.5 : 1.5;
-        ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
+        ctx.strokeRect(renderX, renderY, renderW, renderH);
 
         // Resize handle at bottom-right corner if selected
         if (isSelected && mode === 'design') {
           ctx.fillStyle = '#38bdf8';
-          ctx.fillRect(obs.x + obs.width - 12, obs.y + obs.height - 12, 12, 12);
+          ctx.fillRect(renderX + renderW - 12, renderY + renderH - 12, 12, 12);
         }
 
         ctx.restore();
@@ -555,9 +566,16 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
         const timeSec = timestamp / 1000;
         for (const gear of gears) {
           const isSelected = selectedType === 'gear' && selectedId === gear.id;
+          const isDragging = currentDrag && currentDrag.type === 'gear' && currentDrag.id === gear.id;
+          
+          const renderX = isDragging ? currentDrag.currentX : gear.x;
+          const renderY = isDragging ? currentDrag.currentY : gear.y;
+          
           const isTarget = targets.some((t) => t.gearId === gear.id);
           const rotation = gear.powered ? timeSec * (gear.rotationSpeed || 1) : 0;
-          drawGear(ctx, gear, isSelected, rotation, !!gear.powered, false, false, isTarget);
+          
+          const renderGearData = { ...gear, x: renderX, y: renderY };
+          drawGear(ctx, renderGearData, isSelected, rotation, !!gear.powered, false, false, isTarget);
         }
       } else {
         // Test Simulation Mode
@@ -596,12 +614,16 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
           }
 
           for (const rg of testRuntimeGears) {
+            const isDragging = currentDrag && currentDrag.type === 'gear' && currentDrag.id === rg.id;
+            const renderX = isDragging ? currentDrag.currentX : rg.currentX;
+            const renderY = isDragging ? currentDrag.currentY : rg.currentY;
+
             const gearData: GearData = {
               id: rg.id,
               type: rg.type,
               name: rg.name,
-              x: rg.currentX,
-              y: rg.currentY,
+              x: renderX,
+              y: renderY,
               radius: rg.radius,
               teeth: rg.teeth,
               rotation: rg.currentRotation,
@@ -644,7 +666,7 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
       const cssH = Math.floor(rect.height);
       if (cssW <= 0 || cssH <= 0) return;
 
-      const dpr = Math.min(window.devicePixelRatio || 1, 2.0);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       const targetW = Math.round(cssW * dpr);
       const targetH = Math.round(cssH * dpr);
 
@@ -872,16 +894,11 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
       drag.currentX = snapped.x;
       drag.currentY = snapped.y;
 
-      if (propsRef.current.mode === 'design') {
-        onUpdateGearPosition(drag.id, snapped.x, snapped.y);
-      } else {
-        // Update in test runtime gears
-        setTestRuntimeGears((prev) =>
-          prev.map((g) => (g.id === drag.id ? { ...g, currentX: snapped.x, currentY: snapped.y } : g))
-        );
+      const now = performance.now();
+      if (now - lastTimeRef.current > 110) {
+        sound.playGearDrag();
+        lastTimeRef.current = now;
       }
-
-      sound.playGearDrag();
     } else if (drag.type === 'obstacle') {
       const deltaX = x - drag.startX;
       const deltaY = y - drag.startY;
@@ -893,12 +910,14 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
         newX = Math.round(newX / grid) * grid;
         newY = Math.round(newY / grid) * grid;
       }
-
-      onUpdateObstaclePosition(drag.id, newX, newY, drag.originW, drag.originH);
+      
+      drag.currentX = newX;
+      drag.currentY = newY;
     } else if (drag.type === 'obstacle-resize') {
       const newW = Math.max(30, Math.round((x - drag.originX) / 25) * 25);
       const newH = Math.max(30, Math.round((y - drag.originY) / 25) * 25);
-      onUpdateObstaclePosition(drag.id, drag.originX, drag.originY, newW, newH);
+      drag.currentW = newW;
+      drag.currentH = newH;
     }
   };
 
@@ -910,6 +929,22 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
     } catch {
       // Ignore
     }
+    
+    const drag = dragRef.current;
+    if (drag.type === 'gear') {
+      if (propsRef.current.mode === 'design') {
+        onUpdateGearPosition(drag.id, drag.currentX, drag.currentY);
+      } else {
+        setTestRuntimeGears((prev) =>
+          prev.map((g) => (g.id === drag.id ? { ...g, currentX: drag.currentX, currentY: drag.currentY } : g))
+        );
+      }
+    } else if (drag.type === 'obstacle') {
+      onUpdateObstaclePosition(drag.id, drag.currentX, drag.currentY, drag.originW, drag.originH);
+    } else if (drag.type === 'obstacle-resize') {
+      onUpdateObstaclePosition(drag.id, drag.originX, drag.originY, drag.currentW, drag.currentH);
+    }
+    
     dragRef.current = null;
     sound.playValidPlacement();
   };
