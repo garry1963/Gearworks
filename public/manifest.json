@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "GEARWORKS - Mechanical Gear Puzzle",
+  "short_name": "GEARWORKS",
+  "description": "Tablet-optimised mechanical gear puzzle game with rotational physics and challenging gear mechanisms.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "theme_color": "#121820",
+  "background_color": "#0e1318",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
