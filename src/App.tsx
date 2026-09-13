@@ -185,17 +185,38 @@ export default function App() {
   );
 
   // Start Level
-  const startLevel = useCallback((levelId: number, mode: 'campaign' | 'daily' | 'challenge' = 'campaign') => {
+  const startLevel = useCallback((levelId: number, mode: 'campaign' | 'daily' | 'challenge' | 'custom' = 'campaign', customLevel?: any) => {
+    console.log('startLevel called', {levelId, mode});
     setGameMode(mode);
     setCurrentLevelId(levelId);
     setGameSessionId((s) => s + 1);
 
     let loaded: LoadedLevelResult | null = null;
-    if (mode === 'daily') {
-      const todayStr = new Date().toISOString().split('T')[0];
-      loaded = getDailyLevel(todayStr);
-    } else {
-      loaded = loadLevel(levelId);
+    try {
+      if (mode === 'daily') {
+        const todayStr = new Date().toISOString().split('T')[0];
+        console.log('Loading daily level for', todayStr);
+        loaded = getDailyLevel(todayStr);
+        console.log('Daily level loaded:', loaded?.level.id);
+      } else if (mode === 'custom' && customLevel) {
+        loaded = loadCustomLevel({ 
+          id: 999, 
+          name: 'Custom Level', 
+          levelNumber: 999, 
+          gears: customLevel.gears, 
+          board: customLevel.board, 
+          metadata: { description: 'Custom', tutorial: false, dailyEligible: false, challengeEligible: false, tags: [] }, 
+          obstacles: customLevel.obstacles || [], 
+          rules: { timed: false, timeLimit: 0, moveLimit: 0 }, 
+          targets: [], 
+          hints: [] 
+        });
+      } else {
+        loaded = loadLevel(levelId);
+      }
+    } catch (e: any) {
+      console.error('Error loading level:', e);
+      alert('Error loading level: ' + e.message);
     }
 
     if (loaded) {
@@ -288,33 +309,35 @@ export default function App() {
         const newBestTime = prevLvl.bestTime ? Math.min(prevLvl.bestTime, timeTaken) : timeTaken;
         const newBestMoves = prevLvl.bestMoves ? Math.min(prevLvl.bestMoves, stats.moves) : stats.moves;
 
-        // Unlock next level if in campaign mode
+        const isCampaign = gameMode === 'campaign';
         const nextLevelId = level.id + 1;
-        const updatedLevels: Record<number, LevelProgress> = {
-          ...prev.playerProgress.levels,
-          [level.id]: {
+        
+        let updatedLevels: Record<number, LevelProgress> = { ...prev.playerProgress.levels };
+        
+        if (isCampaign) {
+          updatedLevels[level.id] = {
             ...prevLvl,
             completed: true,
             stars: newStars,
             bestScore: newBestScore,
             bestTime: newBestTime,
             bestMoves: newBestMoves,
-          },
-        };
-
-        if (nextLevelId <= 100 && !updatedLevels[nextLevelId]) {
-          updatedLevels[nextLevelId] = {
-            unlocked: true,
-            completed: false,
-            stars: 0,
-            bestScore: 0,
-            bestTime: null,
-            bestMoves: null,
-            attempts: 0,
-            hintsUsed: 0,
           };
-        } else if (nextLevelId <= 100 && updatedLevels[nextLevelId]) {
-          updatedLevels[nextLevelId].unlocked = true;
+
+          if (nextLevelId <= 100 && !updatedLevels[nextLevelId]) {
+            updatedLevels[nextLevelId] = {
+              unlocked: true,
+              completed: false,
+              stars: 0,
+              bestScore: 0,
+              bestTime: null,
+              bestMoves: null,
+              attempts: 0,
+              hintsUsed: 0,
+            };
+          } else if (nextLevelId <= 100 && updatedLevels[nextLevelId]) {
+            updatedLevels[nextLevelId].unlocked = true;
+          }
         }
 
         // Daily mission update
@@ -347,7 +370,7 @@ export default function App() {
           ...prev,
           playerProgress: {
             ...prev.playerProgress,
-            currentLevel: Math.min(10, Math.max(prev.playerProgress.currentLevel, nextLevelId)),
+            currentLevel: isCampaign ? Math.min(100, Math.max(prev.playerProgress.currentLevel, nextLevelId)) : prev.playerProgress.currentLevel,
             levels: updatedLevels,
           },
           dailyPuzzles: updatedDaily,

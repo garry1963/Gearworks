@@ -45,13 +45,19 @@ export function loadLevel(levelId: number): LoadedLevelResult | null {
  * Generates or retrieves the daily puzzle for a specific date string (YYYY-MM-DD)
  */
 export function getDailyLevel(dateStr: string): LoadedLevelResult {
-  // Hash the date to pick a level from all 100 levels
+  // Hash the date to pick a level from available levels
   let hash = 0;
   for (let i = 0; i < dateStr.length; i++) {
     hash = (hash << 5) - hash + dateStr.charCodeAt(i);
     hash |= 0;
   }
-  const levelNumber = (Math.abs(hash) % 100) + 1;
+  
+  const levelKeys = Object.keys(registeredLevels).map(Number).sort((a, b) => a - b);
+  if (levelKeys.length === 0) {
+    throw new Error("No levels are registered in the game.");
+  }
+  
+  const levelNumber = levelKeys[Math.abs(hash) % levelKeys.length];
   const loaded = loadLevel(levelNumber)!;
 
   // Clone with daily metadata

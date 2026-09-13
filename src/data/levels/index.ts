@@ -2,10 +2,7 @@ import { LevelData } from '../../types';
 export { ALL_100_LEVELS, type LevelCatalogItem } from './allLevelsCatalog';
 
 // Dynamically import all 100 levels across all world directories using Vite's eager glob import
-const levelModules = (import.meta as any).glob(
-  ['./level_*.json', './world_*/*.json', './**/level_*.json'],
-  { eager: true }
-);
+const levelModules = (import.meta as any).glob('./**/*.json', { eager: true });
 
 export const registeredLevels: Record<number, LevelData> = {};
 
