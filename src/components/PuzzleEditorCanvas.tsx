@@ -93,7 +93,8 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
     testSolved,
   };
 
-  // Dragging interaction state
+  // Interaction and layout state
+  const lastTimeRef = useRef<number>(0);
   const dragRef = useRef<{
     type: 'gear' | 'obstacle' | 'obstacle-resize';
     id: string;
@@ -110,24 +111,24 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
     currentH: number;
   } | null>(null);
 
-  // Screen to Logical Board coordinates
+  // Cached layout metrics to avoid DOM thrashing and layout loops on Android tablets
+  const layoutRef = useRef({
+    cssW: 800,
+    cssH: 600,
+    dpr: 1,
+    scale: 1,
+    offsetX: 0,
+    offsetY: 0,
+    left: 0,
+    top: 0,
+  });
+
+  // Screen to Logical Board coordinates using cached metrics (zero DOM layout queries)
   const clientToBoard = useCallback((clientX: number, clientY: number) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return { x: 0, y: 0 };
-    const rect = canvas.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return { x: 0, y: 0 };
-
-    const b = propsRef.current.board;
-    const scaleX = rect.width / b.width;
-    const scaleY = rect.height / b.height;
-    const scale = Math.min(scaleX, scaleY);
-    const renderedWidth = b.width * scale;
-    const renderedHeight = b.height * scale;
-    const offsetX = (rect.width - renderedWidth) / 2;
-    const offsetY = (rect.height - renderedHeight) / 2;
-
-    const canvasX = clientX - rect.left;
-    const canvasY = clientY - rect.top;
+    const { left, top, offsetX, offsetY, scale } = layoutRef.current;
+    if (scale <= 0) return { x: 0, y: 0 };
+    const canvasX = clientX - left;
+    const canvasY = clientY - top;
     const x = (canvasX - offsetX) / scale;
     const y = (canvasY - offsetY) / scale;
     return { x, y };
@@ -421,20 +422,14 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
         testRuntimeGears,
       } = propsRef.current;
 
-      const rect = canvas.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) return;
+      const { cssW, cssH, dpr, scale, offsetX, offsetY } = layoutRef.current;
+      if (cssW <= 0 || cssH <= 0) return;
 
-      const scaleX = rect.width / board.width;
-      const scaleY = rect.height / board.height;
-      const scale = Math.min(scaleX, scaleY);
-      const renderedWidth = board.width * scale;
-      const renderedHeight = board.height * scale;
-      const offsetX = (rect.width - renderedWidth) / 2;
-      const offsetY = (rect.height - renderedHeight) / 2;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       // Background fill
       ctx.fillStyle = '#0a0e14';
-      ctx.fillRect(0, 0, rect.width, rect.height);
+      ctx.fillRect(0, 0, cssW, cssH);
 
       ctx.save();
       ctx.translate(offsetX, offsetY);
@@ -576,7 +571,11 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
           isLevelComplete = sim.isLevelComplete;
 
           // Update rotation for powered/meshed gears
-          const dt = 0.016; // approximate frame delta
+          if (!lastTimeRef.current) lastTimeRef.current = timestamp;
+          const rawDt = (timestamp - lastTimeRef.current) / 1000;
+          lastTimeRef.current = timestamp;
+          const dt = Math.max(0.001, Math.min(rawDt, 0.15));
+
           for (const g of testRuntimeGears) {
             if (g.isPowered && !hasJam) {
               g.currentRotation += (g.angularVelocity || 1.5) * dt;
@@ -633,27 +632,86 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
     [drawGear, onTestSolved]
   );
 
-  // Resize handling
+  // Resize handling decoupled to prevent layout feedback loops
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    const handleResize = () => {
+    const updateLayoutMetrics = () => {
       const rect = container.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = Math.max(1, Math.round(rect.width * dpr));
-      canvas.height = Math.max(1, Math.round(rect.height * dpr));
+      const cssW = Math.floor(rect.width);
+      const cssH = Math.floor(rect.height);
+      if (cssW <= 0 || cssH <= 0) return;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2.0);
+      const targetW = Math.round(cssW * dpr);
+      const targetH = Math.round(cssH * dpr);
+
+      if (canvas.width !== targetW || canvas.height !== targetH) {
+        canvas.width = targetW;
+        canvas.height = targetH;
+      }
+
+      const b = propsRef.current.board;
+      const scaleX = cssW / b.width;
+      const scaleY = cssH / b.height;
+      const scale = Math.min(scaleX, scaleY);
+      const renderedWidth = b.width * scale;
+      const renderedHeight = b.height * scale;
+      const offsetX = (cssW - renderedWidth) / 2;
+      const offsetY = (cssH - renderedHeight) / 2;
+
+      layoutRef.current = {
+        cssW,
+        cssH,
+        dpr,
+        scale,
+        offsetX,
+        offsetY,
+        left: rect.left,
+        top: rect.top,
+      };
     };
 
-    handleResize();
-    const observer = new ResizeObserver(handleResize);
-    observer.observe(container);
-    window.addEventListener('resize', handleResize);
+    updateLayoutMetrics();
+
+    let resizeTimer: number | null = null;
+    const debouncedUpdate = () => {
+      if (resizeTimer) cancelAnimationFrame(resizeTimer);
+      resizeTimer = requestAnimationFrame(updateLayoutMetrics);
+    };
+
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        if (
+          Math.abs(width - layoutRef.current.cssW) >= 1 ||
+          Math.abs(height - layoutRef.current.cssH) >= 1
+        ) {
+          debouncedUpdate();
+        }
+      }
+    });
+
+    ro.observe(container);
+    window.addEventListener('resize', debouncedUpdate);
+    window.addEventListener('orientationchange', debouncedUpdate);
+
+    // Prevent touch scrolling on Android
+    const preventTouch = (e: TouchEvent) => {
+      if (e.cancelable) e.preventDefault();
+    };
+    canvas.addEventListener('touchstart', preventTouch, { passive: false });
+    canvas.addEventListener('touchmove', preventTouch, { passive: false });
 
     return () => {
-      observer.disconnect();
-      window.removeEventListener('resize', handleResize);
+      ro.disconnect();
+      window.removeEventListener('resize', debouncedUpdate);
+      window.removeEventListener('orientationchange', debouncedUpdate);
+      canvas.removeEventListener('touchstart', preventTouch);
+      canvas.removeEventListener('touchmove', preventTouch);
+      if (resizeTimer) cancelAnimationFrame(resizeTimer);
     };
   }, []);
 
@@ -860,7 +918,7 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
     <div
       ref={containerRef}
       id="puzzle-editor-canvas-container"
-      className="relative w-full h-full overflow-hidden flex items-center justify-center select-none touch-none bg-[#090d12]"
+      className="relative w-full h-full overflow-hidden select-none touch-none bg-[#090d12]"
     >
       <canvas
         ref={canvasRef}
@@ -869,7 +927,14 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
-        className="block cursor-crosshair active:cursor-grabbing w-full h-full touch-none"
+        className="absolute inset-0 block cursor-crosshair active:cursor-grabbing touch-none select-none"
+        style={{
+          width: '100%',
+          height: '100%',
+          touchAction: 'none',
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+        }}
       />
     </div>
   );
