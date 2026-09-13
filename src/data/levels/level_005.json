@@ -1,0 +1,182 @@
+{
+  "id": 5,
+  "worldId": 1,
+  "levelNumber": 5,
+  "name": "The Corner",
+  "difficulty": "very_easy",
+  "concept": "corner_connection",
+  "board": {
+    "width": 1200,
+    "height": 700,
+    "gridSize": 25,
+    "snapToGrid": true
+  },
+  "rules": {
+    "timed": true,
+    "timeLimit": 180,
+    "allowUndo": true,
+    "allowReset": true,
+    "allowHints": true,
+    "allowPause": true
+  },
+  "gears": [
+    {
+      "id": "power_01",
+      "type": "powered",
+      "name": "Drive Motor",
+      "x": 320,
+      "y": 440,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": true,
+      "target": false,
+      "locked": false,
+      "material": "titanium"
+    },
+    {
+      "id": "target_01",
+      "type": "fixed",
+      "name": "Kinetic Output",
+      "x": 440,
+      "y": 200,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": false,
+      "target": true,
+      "locked": false,
+      "material": "brass"
+    },
+    {
+      "id": "gear_01",
+      "type": "standard",
+      "name": "Elbow Gear A",
+      "x": 620,
+      "y": 590,
+      "initialX": 620,
+      "initialY": 590,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel"
+    },
+    {
+      "id": "gear_02",
+      "type": "standard",
+      "name": "Elbow Gear B",
+      "x": 760,
+      "y": 590,
+      "initialX": 760,
+      "initialY": 590,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel"
+    }
+  ],
+  "obstacles": [],
+  "targets": [
+    {
+      "id": "t_01",
+      "gearId": "target_01",
+      "required": true,
+      "mustRotate": true,
+      "requiredDirection": "any"
+    }
+  ],
+  "solution": {
+    "minimumMoves": 2,
+    "multipleSolutions": true,
+    "placements": [
+      {
+        "gearId": "gear_01",
+        "x": 320,
+        "y": 320
+      },
+      {
+        "gearId": "gear_02",
+        "x": 440,
+        "y": 320
+      }
+    ],
+    "connectionOrder": [
+      "power_01",
+      "gear_01",
+      "gear_02",
+      "target_01"
+    ]
+  },
+  "scoring": {
+    "baseScore": 1000,
+    "timeMultiplier": 10,
+    "moveMultiplier": 50,
+    "invalidPlacementPenalty": 25,
+    "hintPenalty": 100
+  },
+  "stars": {
+    "three": {
+      "maxMoves": 2,
+      "minimumTimeRemaining": 100,
+      "maxHints": 0
+    },
+    "two": {
+      "maxMoves": 4,
+      "minimumTimeRemaining": 50
+    },
+    "one": {
+      "completionRequired": true
+    }
+  },
+  "hints": [
+    {
+      "id": 1,
+      "type": "highlightGear",
+      "gearId": "gear_01",
+      "text": "Gears do not have to sit in a straight line."
+    },
+    {
+      "id": 2,
+      "type": "ghostPlacement",
+      "gearId": "gear_01",
+      "targetX": 320,
+      "targetY": 320,
+      "text": "Mesh vertically above the drive motor."
+    },
+    {
+      "id": 3,
+      "type": "ghostPlacement",
+      "gearId": "gear_02",
+      "targetX": 440,
+      "targetY": 320,
+      "text": "Create an L-shaped corner connection to reach the target above."
+    }
+  ],
+  "metadata": {
+    "tutorial": false,
+    "dailyEligible": true,
+    "challengeEligible": true,
+    "tags": [
+      "corner",
+      "90_degrees",
+      "geometry"
+    ],
+    "description": "Navigate a 90-degree corner to route mechanical rotation upward."
+  }
+}

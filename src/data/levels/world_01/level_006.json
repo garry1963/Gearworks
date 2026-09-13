@@ -1,0 +1,207 @@
+{
+  "id": 6,
+  "worldId": 1,
+  "levelNumber": 6,
+  "name": "Three Way Spin",
+  "difficulty": "easy",
+  "concept": "branching",
+  "board": {
+    "width": 1200,
+    "height": 700,
+    "gridSize": 25,
+    "snapToGrid": true
+  },
+  "rules": {
+    "timed": true,
+    "timeLimit": 180,
+    "allowUndo": true,
+    "allowReset": true,
+    "allowHints": true,
+    "allowPause": true
+  },
+  "gears": [
+    {
+      "id": "power_01",
+      "type": "powered",
+      "name": "Drive Motor",
+      "x": 240,
+      "y": 360,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": true,
+      "target": false,
+      "locked": false,
+      "material": "titanium"
+    },
+    {
+      "id": "target_01",
+      "type": "fixed",
+      "name": "Kinetic Output",
+      "x": 624,
+      "y": 360,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": false,
+      "target": true,
+      "locked": false,
+      "material": "brass"
+    },
+    {
+      "id": "gear_01",
+      "type": "standard",
+      "name": "Ascent Gear",
+      "x": 350,
+      "y": 590,
+      "initialX": 350,
+      "initialY": 590,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel"
+    },
+    {
+      "id": "gear_02",
+      "type": "standard",
+      "name": "Bridge Gear",
+      "x": 500,
+      "y": 590,
+      "initialX": 500,
+      "initialY": 590,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel"
+    },
+    {
+      "id": "gear_03",
+      "type": "standard",
+      "name": "Descent Gear",
+      "x": 650,
+      "y": 590,
+      "initialX": 650,
+      "initialY": 590,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel"
+    }
+  ],
+  "obstacles": [],
+  "targets": [
+    {
+      "id": "t_01",
+      "gearId": "target_01",
+      "required": true,
+      "mustRotate": true,
+      "requiredDirection": "any"
+    }
+  ],
+  "solution": {
+    "minimumMoves": 3,
+    "multipleSolutions": true,
+    "placements": [
+      {
+        "gearId": "gear_01",
+        "x": 312,
+        "y": 264
+      },
+      {
+        "gearId": "gear_02",
+        "x": 432,
+        "y": 264
+      },
+      {
+        "gearId": "gear_03",
+        "x": 504,
+        "y": 360
+      }
+    ],
+    "connectionOrder": [
+      "power_01",
+      "gear_01",
+      "gear_02",
+      "gear_03",
+      "target_01"
+    ]
+  },
+  "scoring": {
+    "baseScore": 1000,
+    "timeMultiplier": 10,
+    "moveMultiplier": 50,
+    "invalidPlacementPenalty": 25,
+    "hintPenalty": 100
+  },
+  "stars": {
+    "three": {
+      "maxMoves": 3,
+      "minimumTimeRemaining": 100,
+      "maxHints": 0
+    },
+    "two": {
+      "maxMoves": 5,
+      "minimumTimeRemaining": 50
+    },
+    "one": {
+      "completionRequired": true
+    }
+  },
+  "hints": [
+    {
+      "id": 1,
+      "type": "highlightGear",
+      "gearId": "gear_01",
+      "text": "Build an elevated arch bridge."
+    },
+    {
+      "id": 2,
+      "type": "ghostPlacement",
+      "gearId": "gear_01",
+      "targetX": 312,
+      "targetY": 264,
+      "text": "Position the first gear diagonally up from the motor."
+    },
+    {
+      "id": 3,
+      "type": "ghostPlacement",
+      "gearId": "gear_02",
+      "targetX": 432,
+      "targetY": 264,
+      "text": "Place the crown bridge gear at x=432, y=264."
+    }
+  ],
+  "metadata": {
+    "tutorial": false,
+    "dailyEligible": true,
+    "challengeEligible": true,
+    "tags": [
+      "bridge",
+      "arch",
+      "geometry"
+    ],
+    "description": "Construct an arched overhead gear train to span across the bay."
+  }
+}

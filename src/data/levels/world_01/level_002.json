@@ -1,0 +1,153 @@
+{
+  "id": 2,
+  "worldId": 1,
+  "levelNumber": 2,
+  "name": "Second Spin",
+  "difficulty": "tutorial",
+  "concept": "gear_spacing",
+  "board": {
+    "width": 1200,
+    "height": 700,
+    "gridSize": 25,
+    "snapToGrid": true
+  },
+  "rules": {
+    "timed": true,
+    "timeLimit": 180,
+    "allowUndo": true,
+    "allowReset": true,
+    "allowHints": true,
+    "allowPause": true
+  },
+  "gears": [
+    {
+      "id": "power_01",
+      "type": "powered",
+      "name": "Drive Motor",
+      "x": 260,
+      "y": 280,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": true,
+      "target": false,
+      "locked": false,
+      "material": "titanium"
+    },
+    {
+      "id": "target_01",
+      "type": "fixed",
+      "name": "Kinetic Output",
+      "x": 500,
+      "y": 280,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": false,
+      "target": true,
+      "locked": false,
+      "material": "brass"
+    },
+    {
+      "id": "gear_01",
+      "type": "standard",
+      "name": "Steel Pinion",
+      "x": 750,
+      "y": 580,
+      "initialX": 750,
+      "initialY": 580,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel"
+    }
+  ],
+  "obstacles": [],
+  "targets": [
+    {
+      "id": "t_01",
+      "gearId": "target_01",
+      "required": true,
+      "mustRotate": true,
+      "requiredDirection": "any"
+    }
+  ],
+  "solution": {
+    "minimumMoves": 1,
+    "multipleSolutions": false,
+    "placements": [
+      {
+        "gearId": "gear_01",
+        "x": 380,
+        "y": 280
+      }
+    ],
+    "connectionOrder": [
+      "power_01",
+      "gear_01",
+      "target_01"
+    ]
+  },
+  "scoring": {
+    "baseScore": 1000,
+    "timeMultiplier": 10,
+    "moveMultiplier": 50,
+    "invalidPlacementPenalty": 25,
+    "hintPenalty": 100
+  },
+  "stars": {
+    "three": {
+      "maxMoves": 1,
+      "minimumTimeRemaining": 100,
+      "maxHints": 0
+    },
+    "two": {
+      "maxMoves": 2,
+      "minimumTimeRemaining": 50
+    },
+    "one": {
+      "completionRequired": true
+    }
+  },
+  "hints": [
+    {
+      "id": 1,
+      "type": "highlightGear",
+      "gearId": "gear_01",
+      "text": "Notice the gear on the far right staging area."
+    },
+    {
+      "id": 2,
+      "type": "ghostPlacement",
+      "gearId": "gear_01",
+      "targetX": 380,
+      "targetY": 280,
+      "text": "Drop the gear into the snap zone directly between the two anchors."
+    },
+    {
+      "id": 3,
+      "type": "connectionPath",
+      "text": "The auto-snap guides gear teeth into interlocking pitch."
+    }
+  ],
+  "metadata": {
+    "tutorial": true,
+    "dailyEligible": true,
+    "challengeEligible": true,
+    "tags": [
+      "spacing",
+      "snapping"
+    ],
+    "description": "Notice how the automatic snap assists alignment when dragged within meshing tolerance."
+  }
+}

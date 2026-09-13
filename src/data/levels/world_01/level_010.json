@@ -1,0 +1,234 @@
+{
+  "id": 10,
+  "worldId": 1,
+  "levelNumber": 10,
+  "name": "First Machine",
+  "difficulty": "easy",
+  "concept": "mixed_chain",
+  "board": {
+    "width": 1200,
+    "height": 700,
+    "gridSize": 25,
+    "snapToGrid": true
+  },
+  "rules": {
+    "timed": true,
+    "timeLimit": 180,
+    "allowUndo": true,
+    "allowReset": true,
+    "allowHints": true,
+    "allowPause": true
+  },
+  "gears": [
+    {
+      "id": "power_01",
+      "type": "powered",
+      "name": "Primary Dynamo",
+      "x": 220,
+      "y": 420,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": true,
+      "target": false,
+      "locked": false,
+      "material": "titanium"
+    },
+    {
+      "id": "target_01",
+      "type": "fixed",
+      "name": "Master Gearbox Receiver",
+      "x": 680,
+      "y": 320,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": false,
+      "target": true,
+      "locked": false,
+      "material": "brass"
+    },
+    {
+      "id": "gear_small_1",
+      "type": "small",
+      "name": "Intake Pinion (Small)",
+      "x": 260,
+      "y": 590,
+      "initialX": 260,
+      "initialY": 590,
+      "radius": 40,
+      "teeth": 12,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 45,
+      "material": "brass"
+    },
+    {
+      "id": "gear_large_1",
+      "type": "large",
+      "name": "Transmission Flywheel (Large)",
+      "x": 420,
+      "y": 590,
+      "initialX": 420,
+      "initialY": 590,
+      "radius": 80,
+      "teeth": 24,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "copper"
+    },
+    {
+      "id": "gear_std_1",
+      "type": "standard",
+      "name": "Idler Gear (Standard)",
+      "x": 580,
+      "y": 590,
+      "initialX": 580,
+      "initialY": 590,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel"
+    },
+    {
+      "id": "gear_small_2",
+      "type": "small",
+      "name": "Output Pinion (Small)",
+      "x": 740,
+      "y": 590,
+      "initialX": 740,
+      "initialY": 590,
+      "radius": 40,
+      "teeth": 12,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 45,
+      "material": "brass"
+    }
+  ],
+  "obstacles": [],
+  "targets": [
+    {
+      "id": "t_01",
+      "gearId": "target_01",
+      "required": true,
+      "mustRotate": true,
+      "requiredDirection": "any"
+    }
+  ],
+  "solution": {
+    "minimumMoves": 4,
+    "multipleSolutions": false,
+    "placements": [
+      {
+        "gearId": "gear_small_1",
+        "x": 220,
+        "y": 320
+      },
+      {
+        "gearId": "gear_large_1",
+        "x": 340,
+        "y": 320
+      },
+      {
+        "gearId": "gear_std_1",
+        "x": 480,
+        "y": 320
+      },
+      {
+        "gearId": "gear_small_2",
+        "x": 580,
+        "y": 320
+      }
+    ],
+    "connectionOrder": [
+      "power_01",
+      "gear_small_1",
+      "gear_large_1",
+      "gear_std_1",
+      "gear_small_2",
+      "target_01"
+    ]
+  },
+  "scoring": {
+    "baseScore": 1000,
+    "timeMultiplier": 10,
+    "moveMultiplier": 50,
+    "invalidPlacementPenalty": 25,
+    "hintPenalty": 100
+  },
+  "stars": {
+    "three": {
+      "maxMoves": 4,
+      "minimumTimeRemaining": 100,
+      "maxHints": 0
+    },
+    "two": {
+      "maxMoves": 6,
+      "minimumTimeRemaining": 50
+    },
+    "one": {
+      "completionRequired": true
+    }
+  },
+  "hints": [
+    {
+      "id": 1,
+      "type": "highlightGear",
+      "gearId": "gear_small_1",
+      "text": "Mount the small intake pinion above the dynamo at x=220, y=320."
+    },
+    {
+      "id": 2,
+      "type": "ghostPlacement",
+      "gearId": "gear_large_1",
+      "targetX": 340,
+      "targetY": 320,
+      "text": "Mesh the large copper flywheel with the intake pinion."
+    },
+    {
+      "id": 3,
+      "type": "ghostPlacement",
+      "gearId": "gear_small_2",
+      "targetX": 580,
+      "targetY": 320,
+      "text": "Slot the second small pinion between standard gear and receiver."
+    }
+  ],
+  "metadata": {
+    "tutorial": false,
+    "dailyEligible": true,
+    "challengeEligible": true,
+    "tags": [
+      "milestone",
+      "world_1",
+      "machine",
+      "mastery"
+    ],
+    "description": "The World 1 Masterpiece: assemble a complete compound multi-size mechanical engine."
+  },
+  "isWorldBoss": true
+}

@@ -1,0 +1,154 @@
+{
+  "id": 1,
+  "worldId": 1,
+  "levelNumber": 1,
+  "name": "First Rotation",
+  "difficulty": "tutorial",
+  "concept": "basic_connection",
+  "board": {
+    "width": 1200,
+    "height": 700,
+    "gridSize": 25,
+    "snapToGrid": true
+  },
+  "rules": {
+    "timed": true,
+    "timeLimit": 180,
+    "allowUndo": true,
+    "allowReset": true,
+    "allowHints": true,
+    "allowPause": true
+  },
+  "gears": [
+    {
+      "id": "power_01",
+      "type": "powered",
+      "name": "Drive Motor",
+      "x": 280,
+      "y": 320,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": true,
+      "target": false,
+      "locked": false,
+      "material": "titanium"
+    },
+    {
+      "id": "target_01",
+      "type": "fixed",
+      "name": "Kinetic Output",
+      "x": 520,
+      "y": 320,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": false,
+      "target": true,
+      "locked": false,
+      "material": "brass"
+    },
+    {
+      "id": "gear_01",
+      "type": "standard",
+      "name": "Transfer Gear",
+      "x": 400,
+      "y": 590,
+      "initialX": 400,
+      "initialY": 590,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel"
+    }
+  ],
+  "obstacles": [],
+  "targets": [
+    {
+      "id": "t_01",
+      "gearId": "target_01",
+      "required": true,
+      "mustRotate": true,
+      "requiredDirection": "any"
+    }
+  ],
+  "solution": {
+    "minimumMoves": 1,
+    "multipleSolutions": false,
+    "placements": [
+      {
+        "gearId": "gear_01",
+        "x": 400,
+        "y": 320
+      }
+    ],
+    "connectionOrder": [
+      "power_01",
+      "gear_01",
+      "target_01"
+    ]
+  },
+  "scoring": {
+    "baseScore": 1000,
+    "timeMultiplier": 10,
+    "moveMultiplier": 50,
+    "invalidPlacementPenalty": 25,
+    "hintPenalty": 100
+  },
+  "stars": {
+    "three": {
+      "maxMoves": 1,
+      "minimumTimeRemaining": 90,
+      "maxHints": 0
+    },
+    "two": {
+      "maxMoves": 3,
+      "minimumTimeRemaining": 45
+    },
+    "one": {
+      "completionRequired": true
+    }
+  },
+  "hints": [
+    {
+      "id": 1,
+      "type": "highlightGear",
+      "gearId": "gear_01",
+      "text": "Select the steel transfer gear in the staging area."
+    },
+    {
+      "id": 2,
+      "type": "ghostPlacement",
+      "gearId": "gear_01",
+      "targetX": 400,
+      "targetY": 320,
+      "text": "Drag the gear between the drive motor and the target."
+    },
+    {
+      "id": 3,
+      "type": "connectionPath",
+      "text": "Form an unbroken mechanical chain from blue motor to green output."
+    }
+  ],
+  "metadata": {
+    "tutorial": true,
+    "dailyEligible": true,
+    "challengeEligible": true,
+    "tags": [
+      "tutorial",
+      "basic",
+      "single_gear"
+    ],
+    "description": "Drag the movable gear into the gap to transfer rotational power to the output target."
+  }
+}

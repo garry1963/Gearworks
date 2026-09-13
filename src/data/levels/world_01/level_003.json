@@ -1,0 +1,181 @@
+{
+  "id": 3,
+  "worldId": 1,
+  "levelNumber": 3,
+  "name": "Passing Power",
+  "difficulty": "very_easy",
+  "concept": "chain",
+  "board": {
+    "width": 1200,
+    "height": 700,
+    "gridSize": 25,
+    "snapToGrid": true
+  },
+  "rules": {
+    "timed": true,
+    "timeLimit": 180,
+    "allowUndo": true,
+    "allowReset": true,
+    "allowHints": true,
+    "allowPause": true
+  },
+  "gears": [
+    {
+      "id": "power_01",
+      "type": "powered",
+      "name": "Drive Motor",
+      "x": 220,
+      "y": 300,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": true,
+      "target": false,
+      "locked": false,
+      "material": "titanium"
+    },
+    {
+      "id": "target_01",
+      "type": "fixed",
+      "name": "Kinetic Output",
+      "x": 580,
+      "y": 300,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": false,
+      "target": true,
+      "locked": false,
+      "material": "brass"
+    },
+    {
+      "id": "gear_01",
+      "type": "standard",
+      "name": "Chain Link Alpha",
+      "x": 350,
+      "y": 590,
+      "initialX": 350,
+      "initialY": 590,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel"
+    },
+    {
+      "id": "gear_02",
+      "type": "standard",
+      "name": "Chain Link Beta",
+      "x": 500,
+      "y": 590,
+      "initialX": 500,
+      "initialY": 590,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel"
+    }
+  ],
+  "obstacles": [],
+  "targets": [
+    {
+      "id": "t_01",
+      "gearId": "target_01",
+      "required": true,
+      "mustRotate": true,
+      "requiredDirection": "any"
+    }
+  ],
+  "solution": {
+    "minimumMoves": 2,
+    "multipleSolutions": true,
+    "placements": [
+      {
+        "gearId": "gear_01",
+        "x": 340,
+        "y": 300
+      },
+      {
+        "gearId": "gear_02",
+        "x": 460,
+        "y": 300
+      }
+    ],
+    "connectionOrder": [
+      "power_01",
+      "gear_01",
+      "gear_02",
+      "target_01"
+    ]
+  },
+  "scoring": {
+    "baseScore": 1000,
+    "timeMultiplier": 10,
+    "moveMultiplier": 50,
+    "invalidPlacementPenalty": 25,
+    "hintPenalty": 100
+  },
+  "stars": {
+    "three": {
+      "maxMoves": 2,
+      "minimumTimeRemaining": 100,
+      "maxHints": 0
+    },
+    "two": {
+      "maxMoves": 4,
+      "minimumTimeRemaining": 50
+    },
+    "one": {
+      "completionRequired": true
+    }
+  },
+  "hints": [
+    {
+      "id": 1,
+      "type": "highlightGear",
+      "gearId": "gear_01",
+      "text": "Position the first gear next to the drive motor."
+    },
+    {
+      "id": 2,
+      "type": "ghostPlacement",
+      "gearId": "gear_01",
+      "targetX": 340,
+      "targetY": 300,
+      "text": "Place gear 1 at x=340, y=300 to engage the drive motor."
+    },
+    {
+      "id": 3,
+      "type": "ghostPlacement",
+      "gearId": "gear_02",
+      "targetX": 460,
+      "targetY": 300,
+      "text": "Bridge the remaining gap to the output target."
+    }
+  ],
+  "metadata": {
+    "tutorial": false,
+    "dailyEligible": true,
+    "challengeEligible": true,
+    "tags": [
+      "chain",
+      "two_gears"
+    ],
+    "description": "Construct a two-gear chain that relays rotation across a wider span."
+  }
+}

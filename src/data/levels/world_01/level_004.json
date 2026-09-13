@@ -1,0 +1,181 @@
+{
+  "id": 4,
+  "worldId": 1,
+  "levelNumber": 4,
+  "name": "Small Solution",
+  "difficulty": "very_easy",
+  "concept": "small_gear",
+  "board": {
+    "width": 1200,
+    "height": 700,
+    "gridSize": 25,
+    "snapToGrid": true
+  },
+  "rules": {
+    "timed": true,
+    "timeLimit": 180,
+    "allowUndo": true,
+    "allowReset": true,
+    "allowHints": true,
+    "allowPause": true
+  },
+  "gears": [
+    {
+      "id": "power_01",
+      "type": "powered",
+      "name": "Drive Motor",
+      "x": 260,
+      "y": 320,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": true,
+      "target": false,
+      "locked": false,
+      "material": "titanium"
+    },
+    {
+      "id": "target_01",
+      "type": "fixed",
+      "name": "Kinetic Output",
+      "x": 580,
+      "y": 320,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": false,
+      "target": true,
+      "locked": false,
+      "material": "brass"
+    },
+    {
+      "id": "gear_small",
+      "type": "small",
+      "name": "Brass Pinion (Small)",
+      "x": 350,
+      "y": 590,
+      "initialX": 350,
+      "initialY": 590,
+      "radius": 40,
+      "teeth": 12,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 45,
+      "material": "brass"
+    },
+    {
+      "id": "gear_std",
+      "type": "standard",
+      "name": "Steel Spur (Standard)",
+      "x": 510,
+      "y": 590,
+      "initialX": 510,
+      "initialY": 590,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel"
+    }
+  ],
+  "obstacles": [],
+  "targets": [
+    {
+      "id": "t_01",
+      "gearId": "target_01",
+      "required": true,
+      "mustRotate": true,
+      "requiredDirection": "any"
+    }
+  ],
+  "solution": {
+    "minimumMoves": 2,
+    "multipleSolutions": false,
+    "placements": [
+      {
+        "gearId": "gear_small",
+        "x": 360,
+        "y": 320
+      },
+      {
+        "gearId": "gear_std",
+        "x": 460,
+        "y": 320
+      }
+    ],
+    "connectionOrder": [
+      "power_01",
+      "gear_small",
+      "gear_std",
+      "target_01"
+    ]
+  },
+  "scoring": {
+    "baseScore": 1000,
+    "timeMultiplier": 10,
+    "moveMultiplier": 50,
+    "invalidPlacementPenalty": 25,
+    "hintPenalty": 100
+  },
+  "stars": {
+    "three": {
+      "maxMoves": 2,
+      "minimumTimeRemaining": 100,
+      "maxHints": 0
+    },
+    "two": {
+      "maxMoves": 4,
+      "minimumTimeRemaining": 50
+    },
+    "one": {
+      "completionRequired": true
+    }
+  },
+  "hints": [
+    {
+      "id": 1,
+      "type": "highlightGear",
+      "gearId": "gear_small",
+      "text": "The smaller brass gear has a radius of 40 and spins faster."
+    },
+    {
+      "id": 2,
+      "type": "ghostPlacement",
+      "gearId": "gear_small",
+      "targetX": 360,
+      "targetY": 320,
+      "text": "Place the small gear between motor (radius 60) and standard gear (radius 60)."
+    },
+    {
+      "id": 3,
+      "type": "ghostPlacement",
+      "gearId": "gear_std",
+      "targetX": 460,
+      "targetY": 320,
+      "text": "Connect the standard steel gear into the target receiver."
+    }
+  ],
+  "metadata": {
+    "tutorial": false,
+    "dailyEligible": true,
+    "challengeEligible": true,
+    "tags": [
+      "small_gear",
+      "mixed_sizes"
+    ],
+    "description": "Learn to combine small brass pinions with standard steel spur gears."
+  }
+}

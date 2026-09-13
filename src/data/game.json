@@ -1,0 +1,88 @@
+{
+  "title": "GEARWORKS",
+  "version": "1.0.0",
+  "totalWorlds": 10,
+  "levelsPerWorld": 10,
+  "worlds": [
+    {
+      "id": 1,
+      "name": "First Rotation",
+      "theme": "Industrial Workshop",
+      "levelRange": [1, 10],
+      "description": "Master the fundamentals of gear meshing, spacing, and mechanical chains.",
+      "unlocked": true
+    },
+    {
+      "id": 2,
+      "name": "Basic Mechanics",
+      "theme": "Foundry",
+      "levelRange": [11, 20],
+      "description": "Explore torque ratios, counter-rotations, and stepped gearboxes.",
+      "unlocked": false
+    },
+    {
+      "id": 3,
+      "name": "Mechanical Networks",
+      "theme": "Hydroelectric Mill",
+      "levelRange": [21, 30],
+      "description": "Multi-path branches, differential drives, and simultaneous target synchronization.",
+      "unlocked": false
+    },
+    {
+      "id": 4,
+      "name": "Tight Spaces",
+      "theme": "Watchmaker's Bench",
+      "levelRange": [31, 40],
+      "description": "Precision placement in constrained mechanical housings.",
+      "unlocked": false
+    },
+    {
+      "id": 5,
+      "name": "Obstacles",
+      "theme": "Steam Vault",
+      "levelRange": [41, 50],
+      "description": "Navigate around stationary structural beams and barrier bulkheads.",
+      "unlocked": false
+    },
+    {
+      "id": 6,
+      "name": "Special Gears",
+      "theme": "Automaton Lab",
+      "levelRange": [51, 60],
+      "description": "Heavy flywheels, one-way ratchets, and idler compound pins.",
+      "unlocked": false
+    },
+    {
+      "id": 7,
+      "name": "Complex Machines",
+      "theme": "Locomotive Yard",
+      "levelRange": [61, 70],
+      "description": "Intricate multi-tier linkages and compound mechanical drivetrains.",
+      "unlocked": false
+    },
+    {
+      "id": 8,
+      "name": "Engineering Elite",
+      "theme": "Clocktower Spire",
+      "levelRange": [71, 80],
+      "description": "Demanding puzzle mechanics with strict move constraints.",
+      "unlocked": false
+    },
+    {
+      "id": 9,
+      "name": "Impossible Machines",
+      "theme": "Perpetual Engine Hall",
+      "levelRange": [81, 90],
+      "description": "Mind-bending spatial puzzles requiring flawless deduction.",
+      "unlocked": false
+    },
+    {
+      "id": 10,
+      "name": "Master Mechanic",
+      "theme": "Grand Observatory",
+      "levelRange": [91, 100],
+      "description": "The ultimate test of mechanical mastery and kinetic harmony.",
+      "unlocked": false
+    }
+  ]
+}

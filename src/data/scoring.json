@@ -1,0 +1,7 @@
+{
+  "baseScore": 1000,
+  "timeMultiplier": 10,
+  "moveMultiplier": 50,
+  "invalidPlacementPenalty": 25,
+  "hintPenalty": 100
+}

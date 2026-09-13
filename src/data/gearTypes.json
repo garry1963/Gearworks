@@ -1,0 +1,76 @@
+{
+  "types": {
+    "standard": {
+      "defaultRadius": 60,
+      "defaultTeeth": 18,
+      "material": "steel",
+      "color": "#94a3b8",
+      "accentColor": "#64748b",
+      "description": "Standard balanced gear for universal power transmission."
+    },
+    "small": {
+      "defaultRadius": 40,
+      "defaultTeeth": 12,
+      "material": "brass",
+      "color": "#fbbf24",
+      "accentColor": "#d97706",
+      "description": "Compact gear suitable for tight spaces and high-speed gearing."
+    },
+    "large": {
+      "defaultRadius": 80,
+      "defaultTeeth": 24,
+      "material": "copper",
+      "color": "#f97316",
+      "accentColor": "#c2410c",
+      "description": "Broad heavy gear spanning wide distances across the mechanism."
+    },
+    "powered": {
+      "defaultRadius": 60,
+      "defaultTeeth": 18,
+      "material": "titanium",
+      "color": "#38bdf8",
+      "accentColor": "#0284c7",
+      "description": "Motorized drive gear that generates continuous rotational kinetic power."
+    },
+    "fixed": {
+      "defaultRadius": 60,
+      "defaultTeeth": 18,
+      "material": "steel",
+      "color": "#64748b",
+      "accentColor": "#475569",
+      "description": "Bolted to chassis; acts as anchor or receiver."
+    },
+    "target": {
+      "defaultRadius": 60,
+      "defaultTeeth": 18,
+      "material": "brass",
+      "color": "#10b981",
+      "accentColor": "#059669",
+      "description": "Target mechanism output that must receive kinetic power to complete the circuit."
+    },
+    "heavy": {
+      "defaultRadius": 75,
+      "defaultTeeth": 22,
+      "material": "steel",
+      "color": "#475569",
+      "accentColor": "#334155",
+      "description": "High inertia gear with stable cadence."
+    },
+    "directional": {
+      "defaultRadius": 60,
+      "defaultTeeth": 18,
+      "material": "copper",
+      "color": "#fb923c",
+      "accentColor": "#ea580c",
+      "description": "One-way ratcheted gear that only turns in its designated direction."
+    },
+    "locked": {
+      "defaultRadius": 60,
+      "defaultTeeth": 18,
+      "material": "steel",
+      "color": "#ef4444",
+      "accentColor": "#b91c1c",
+      "description": "Locked gear that prevents rotation until unlocked."
+    }
+  }
+}

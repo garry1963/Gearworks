@@ -1,0 +1,232 @@
+{
+  "id": 9,
+  "worldId": 1,
+  "levelNumber": 9,
+  "name": "The Long Chain",
+  "difficulty": "easy",
+  "concept": "long_chain",
+  "board": {
+    "width": 1200,
+    "height": 700,
+    "gridSize": 25,
+    "snapToGrid": true
+  },
+  "rules": {
+    "timed": true,
+    "timeLimit": 180,
+    "allowUndo": true,
+    "allowReset": true,
+    "allowHints": true,
+    "allowPause": true
+  },
+  "gears": [
+    {
+      "id": "power_01",
+      "type": "powered",
+      "name": "Drive Motor",
+      "x": 160,
+      "y": 320,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": true,
+      "target": false,
+      "locked": false,
+      "material": "titanium"
+    },
+    {
+      "id": "target_01",
+      "type": "fixed",
+      "name": "Kinetic Output",
+      "x": 760,
+      "y": 320,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": false,
+      "target": true,
+      "locked": false,
+      "material": "brass"
+    },
+    {
+      "id": "gear_01",
+      "type": "standard",
+      "name": "Link Gear 1",
+      "x": 260,
+      "y": 590,
+      "initialX": 260,
+      "initialY": 590,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel"
+    },
+    {
+      "id": "gear_02",
+      "type": "standard",
+      "name": "Link Gear 2",
+      "x": 420,
+      "y": 590,
+      "initialX": 420,
+      "initialY": 590,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel"
+    },
+    {
+      "id": "gear_03",
+      "type": "standard",
+      "name": "Link Gear 3",
+      "x": 580,
+      "y": 590,
+      "initialX": 580,
+      "initialY": 590,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel"
+    },
+    {
+      "id": "gear_04",
+      "type": "standard",
+      "name": "Link Gear 4",
+      "x": 740,
+      "y": 590,
+      "initialX": 740,
+      "initialY": 590,
+      "radius": 60,
+      "teeth": 18,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel"
+    }
+  ],
+  "obstacles": [],
+  "targets": [
+    {
+      "id": "t_01",
+      "gearId": "target_01",
+      "required": true,
+      "mustRotate": true,
+      "requiredDirection": "any"
+    }
+  ],
+  "solution": {
+    "minimumMoves": 4,
+    "multipleSolutions": true,
+    "placements": [
+      {
+        "gearId": "gear_01",
+        "x": 280,
+        "y": 320
+      },
+      {
+        "gearId": "gear_02",
+        "x": 400,
+        "y": 320
+      },
+      {
+        "gearId": "gear_03",
+        "x": 520,
+        "y": 320
+      },
+      {
+        "gearId": "gear_04",
+        "x": 640,
+        "y": 320
+      }
+    ],
+    "connectionOrder": [
+      "power_01",
+      "gear_01",
+      "gear_02",
+      "gear_03",
+      "gear_04",
+      "target_01"
+    ]
+  },
+  "scoring": {
+    "baseScore": 1000,
+    "timeMultiplier": 10,
+    "moveMultiplier": 50,
+    "invalidPlacementPenalty": 25,
+    "hintPenalty": 100
+  },
+  "stars": {
+    "three": {
+      "maxMoves": 4,
+      "minimumTimeRemaining": 100,
+      "maxHints": 0
+    },
+    "two": {
+      "maxMoves": 6,
+      "minimumTimeRemaining": 50
+    },
+    "one": {
+      "completionRequired": true
+    }
+  },
+  "hints": [
+    {
+      "id": 1,
+      "type": "highlightGear",
+      "gearId": "gear_01",
+      "text": "Connect four consecutive gears across the conveyor beam."
+    },
+    {
+      "id": 2,
+      "type": "ghostPlacement",
+      "gearId": "gear_01",
+      "targetX": 280,
+      "targetY": 320,
+      "text": "Anchor the first gear to the drive motor."
+    },
+    {
+      "id": 3,
+      "type": "ghostPlacement",
+      "gearId": "gear_04",
+      "targetX": 640,
+      "targetY": 320,
+      "text": "Link the final gear into the output target."
+    }
+  ],
+  "metadata": {
+    "tutorial": false,
+    "dailyEligible": true,
+    "challengeEligible": true,
+    "tags": [
+      "long_chain",
+      "multistage",
+      "drivetrain"
+    ],
+    "description": "Construct a continuous 6-gear drivetrain transferring power across the workshop."
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "GEARWORKS",
+  "description": "A tablet-optimised mechanical gear puzzle game featuring physics-driven rotational power transmission, realistic meshing, and handcrafted mechanical challenges.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

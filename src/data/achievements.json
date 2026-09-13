@@ -1,0 +1,58 @@
+[
+  {
+    "id": "first_mechanism",
+    "name": "First Mechanism",
+    "description": "Complete your first level.",
+    "requirementType": "levelsCompleted",
+    "requirementValue": 1,
+    "iconName": "Cog"
+  },
+  {
+    "id": "three_star",
+    "name": "Three Star Mechanic",
+    "description": "Earn three stars on any level.",
+    "requirementType": "threeStarLevels",
+    "requirementValue": 1,
+    "iconName": "Star"
+  },
+  {
+    "id": "perfect_fit",
+    "name": "Perfect Fit",
+    "description": "Complete a level without an invalid placement.",
+    "requirementType": "perfectLevel",
+    "requirementValue": 1,
+    "iconName": "CheckCircle2"
+  },
+  {
+    "id": "speed_demon",
+    "name": "Clockwork Precision",
+    "description": "Complete a level with more than 120 seconds remaining.",
+    "requirementType": "speedRun",
+    "requirementValue": 120,
+    "iconName": "Zap"
+  },
+  {
+    "id": "five_levels",
+    "name": "Apprentice Machinist",
+    "description": "Complete 5 levels.",
+    "requirementType": "levelsCompleted",
+    "requirementValue": 5,
+    "iconName": "Wrench"
+  },
+  {
+    "id": "ten_levels",
+    "name": "Getting Started",
+    "description": "Complete 10 levels and conquer World 1.",
+    "requirementType": "levelsCompleted",
+    "requirementValue": 10,
+    "iconName": "Award"
+  },
+  {
+    "id": "perfectionist",
+    "name": "Master of Stars",
+    "description": "Earn 3 stars on at least 5 different levels.",
+    "requirementType": "threeStarLevels",
+    "requirementValue": 5,
+    "iconName": "Sparkles"
+  }
+]

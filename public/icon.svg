@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </radialGradient>
+    <linearGradient id="bronzeGear" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d97706"/>
+      <stop offset="50%" stop-color="#b45309"/>
+      <stop offset="100%" stop-color="#78350f"/>
+    </linearGradient>
+    <radialGradient id="powerCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="40%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bgGlow)"/>
+  <circle cx="256" cy="256" r="210" stroke="#334155" stroke-width="6" stroke-dasharray="12 8" fill="none" opacity="0.6"/>
+  <!-- Gear teeth (16 teeth) -->
+  <g fill="url(#bronzeGear)">
+    <circle cx="256" cy="256" r="160"/>
+    <g transform="translate(256, 256)">
+      <!-- 16 Teeth generated symmetrically -->
+      <rect x="-18" y="-195" width="36" height="45" rx="6" />
+      <rect x="-18" y="-195" width="36" height="45" rx="6" transform="rotate(22.5)" />
+      <rect x="-18" y="-195" width="36" height="45" rx="6" transform="rotate(45)" />
+      <rect x="-18" y="-195" width="36" height="45" rx="6" transform="rotate(67.5)" />
+      <rect x="-18" y="-195" width="36" height="45" rx="6" transform="rotate(90)" />
+      <rect x="-18" y="-195" width="36" height="45" rx="6" transform="rotate(112.5)" />
+      <rect x="-18" y="-195" width="36" height="45" rx="6" transform="rotate(135)" />
+      <rect x="-18" y="-195" width="36" height="45" rx="6" transform="rotate(157.5)" />
+      <rect x="-18" y="-195" width="36" height="45" rx="6" transform="rotate(180)" />
+      <rect x="-18" y="-195" width="36" height="45" rx="6" transform="rotate(202.5)" />
+      <rect x="-18" y="-195" width="36" height="45" rx="6" transform="rotate(225)" />
+      <rect x="-18" y="-195" width="36" height="45" rx="6" transform="rotate(247.5)" />
+      <rect x="-18" y="-195" width="36" height="45" rx="6" transform="rotate(270)" />
+      <rect x="-18" y="-195" width="36" height="45" rx="6" transform="rotate(292.5)" />
+      <rect x="-18" y="-195" width="36" height="45" rx="6" transform="rotate(315)" />
+      <rect x="-18" y="-195" width="36" height="45" rx="6" transform="rotate(337.5)" />
+    </g>
+  </g>
+  <!-- Inner rim cutouts -->
+  <circle cx="256" cy="256" r="125" fill="#0f172a"/>
+  <!-- Spokes -->
+  <g stroke="url(#bronzeGear)" stroke-width="24" stroke-linecap="round">
+    <line x1="256" y1="135" x2="256" y2="377"/>
+    <line x1="135" y1="256" x2="377" y2="256"/>
+    <line x1="170" y1="170" x2="342" y2="342"/>
+    <line x1="170" y1="342" x2="342" y2="170"/>
+  </g>
+  <!-- Central Hub -->
+  <circle cx="256" cy="256" r="75" fill="#1e293b" stroke="#f59e0b" stroke-width="6"/>
+  <circle cx="256" cy="256" r="46" fill="url(#powerCore)"/>
+  <circle cx="256" cy="256" r="22" fill="#e0f2fe"/>
+</svg>

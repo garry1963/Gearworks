@@ -1,0 +1,498 @@
+{
+  "id": 49,
+  "worldId": 5,
+  "levelNumber": 9,
+  "name": "Obstacle Maze",
+  "difficulty": "very_hard",
+  "concept": "obstacle_maze",
+  "isWorldBoss": false,
+  "board": {
+    "width": 1200,
+    "height": 700,
+    "gridSize": 25,
+    "snapToGrid": true
+  },
+  "rules": {
+    "timed": true,
+    "timeLimit": 105,
+    "allowUndo": true,
+    "allowReset": true,
+    "allowHints": true,
+    "allowPause": true
+  },
+  "gears": [
+    {
+      "id": "power_01",
+      "type": "powered",
+      "name": "Drive Motor",
+      "x": 120,
+      "y": 260,
+      "radius": 48,
+      "teeth": 14,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": true,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "titanium"
+    },
+    {
+      "id": "gear_01",
+      "type": "standard",
+      "name": "Spine Cog 1",
+      "x": 320,
+      "y": 540,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 320,
+      "initialY": 540
+    },
+    {
+      "id": "gear_02",
+      "type": "standard",
+      "name": "Spine Cog 2",
+      "x": 432,
+      "y": 540,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 432,
+      "initialY": 540
+    },
+    {
+      "id": "gear_03",
+      "type": "standard",
+      "name": "Spine Cog 3",
+      "x": 544,
+      "y": 540,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 544,
+      "initialY": 540
+    },
+    {
+      "id": "gear_04",
+      "type": "standard",
+      "name": "Spine Cog 4",
+      "x": 656,
+      "y": 540,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 656,
+      "initialY": 540
+    },
+    {
+      "id": "gear_05",
+      "type": "standard",
+      "name": "Spine Cog 5",
+      "x": 768,
+      "y": 540,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 768,
+      "initialY": 540
+    },
+    {
+      "id": "gear_06",
+      "type": "standard",
+      "name": "Spine Cog 6",
+      "x": 880,
+      "y": 540,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 880,
+      "initialY": 540
+    },
+    {
+      "id": "gear_07",
+      "type": "standard",
+      "name": "Branch Cog 7",
+      "x": 432,
+      "y": 645,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 432,
+      "initialY": 645
+    },
+    {
+      "id": "gear_08",
+      "type": "standard",
+      "name": "Branch Cog 8",
+      "x": 544,
+      "y": 645,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 544,
+      "initialY": 645
+    },
+    {
+      "id": "target_01",
+      "type": "fixed",
+      "name": "Kinetic Output 1",
+      "x": 540,
+      "y": 118,
+      "radius": 46,
+      "teeth": 14,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": false,
+      "target": true,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "brass"
+    },
+    {
+      "id": "gear_09",
+      "type": "standard",
+      "name": "Branch Cog 9",
+      "x": 656,
+      "y": 645,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 656,
+      "initialY": 645
+    },
+    {
+      "id": "gear_10",
+      "type": "standard",
+      "name": "Branch Cog 10",
+      "x": 768,
+      "y": 645,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 768,
+      "initialY": 645
+    },
+    {
+      "id": "target_02",
+      "type": "fixed",
+      "name": "Kinetic Output 2",
+      "x": 268,
+      "y": 423,
+      "radius": 46,
+      "teeth": 14,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": false,
+      "target": true,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "brass"
+    },
+    {
+      "id": "gear_11",
+      "type": "standard",
+      "name": "Branch Cog 11",
+      "x": 880,
+      "y": 645,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 880,
+      "initialY": 645
+    },
+    {
+      "id": "target_03",
+      "type": "fixed",
+      "name": "Kinetic Output 3",
+      "x": 830,
+      "y": 260,
+      "radius": 46,
+      "teeth": 14,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": false,
+      "target": true,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "brass"
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "obs_1",
+      "x": 620,
+      "y": 410,
+      "width": 30,
+      "height": 60,
+      "type": "wall",
+      "collision": true,
+      "visible": true
+    },
+    {
+      "id": "obs_2",
+      "x": 780,
+      "y": 70,
+      "width": 30,
+      "height": 70,
+      "type": "wall",
+      "collision": true,
+      "visible": true
+    },
+    {
+      "id": "obs_3",
+      "x": 940,
+      "y": 70,
+      "width": 30,
+      "height": 70,
+      "type": "wall",
+      "collision": true,
+      "visible": true
+    },
+    {
+      "id": "obs_4",
+      "x": 860,
+      "y": 410,
+      "width": 30,
+      "height": 60,
+      "type": "wall",
+      "collision": true,
+      "visible": true
+    }
+  ],
+  "targets": [
+    {
+      "id": "req_target_01",
+      "gearId": "target_01",
+      "required": true,
+      "mustRotate": true,
+      "requiredDirection": "any"
+    },
+    {
+      "id": "req_target_02",
+      "gearId": "target_02",
+      "required": true,
+      "mustRotate": true,
+      "requiredDirection": "any"
+    },
+    {
+      "id": "req_target_03",
+      "gearId": "target_03",
+      "required": true,
+      "mustRotate": true,
+      "requiredDirection": "any"
+    }
+  ],
+  "solution": {
+    "minimumMoves": 11,
+    "multipleSolutions": false,
+    "placements": [
+      {
+        "gearId": "gear_01",
+        "x": 212,
+        "y": 260
+      },
+      {
+        "gearId": "gear_02",
+        "x": 300,
+        "y": 260
+      },
+      {
+        "gearId": "gear_03",
+        "x": 388,
+        "y": 260
+      },
+      {
+        "gearId": "gear_04",
+        "x": 476,
+        "y": 260
+      },
+      {
+        "gearId": "gear_05",
+        "x": 564,
+        "y": 260
+      },
+      {
+        "gearId": "gear_06",
+        "x": 652,
+        "y": 260
+      },
+      {
+        "gearId": "gear_07",
+        "x": 388,
+        "y": 172
+      },
+      {
+        "gearId": "gear_08",
+        "x": 450,
+        "y": 110
+      },
+      {
+        "gearId": "gear_09",
+        "x": 388,
+        "y": 348
+      },
+      {
+        "gearId": "gear_10",
+        "x": 358,
+        "y": 431
+      },
+      {
+        "gearId": "gear_11",
+        "x": 740,
+        "y": 260
+      }
+    ],
+    "connectionOrder": [
+      "power_01",
+      "gear_01",
+      "gear_02",
+      "gear_03",
+      "gear_04",
+      "gear_05",
+      "gear_06",
+      "gear_07",
+      "gear_08",
+      "target_01",
+      "gear_09",
+      "gear_10",
+      "target_02",
+      "gear_11",
+      "target_03"
+    ]
+  },
+  "scoring": {
+    "baseScore": 1750,
+    "timeMultiplier": 10,
+    "moveMultiplier": 50,
+    "invalidPlacementPenalty": 25,
+    "hintPenalty": 100
+  },
+  "stars": {
+    "three": {
+      "maxMoves": 11,
+      "minimumTimeRemaining": 42,
+      "maxHints": 0
+    },
+    "two": {
+      "maxMoves": 13,
+      "minimumTimeRemaining": 21
+    },
+    "one": {
+      "completionRequired": true
+    }
+  },
+  "hints": [
+    {
+      "id": 1,
+      "type": "highlightGear",
+      "gearId": "gear_01",
+      "text": "Inspect the mechanical requirements for Obstacle Maze. Select a transfer gear from the assembly tray."
+    },
+    {
+      "id": 2,
+      "type": "ghostPlacement",
+      "gearId": "gear_01",
+      "targetX": 212,
+      "targetY": 260,
+      "text": "Snap the transfer cog into tangent alignment with the driving gear."
+    },
+    {
+      "id": 3,
+      "type": "connectionPath",
+      "text": "Complete the kinetic train to synchronize all 3 output mechanisms."
+    }
+  ],
+  "metadata": {
+    "tutorial": false,
+    "dailyEligible": true,
+    "challengeEligible": true,
+    "tags": [
+      "obstacle_maze",
+      "very_hard",
+      "standard"
+    ],
+    "description": "Synchronize kinetic power according to the 'obstacle maze' principle."
+  }
+}
