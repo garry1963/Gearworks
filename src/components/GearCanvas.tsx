@@ -187,6 +187,106 @@ function renderGearToSprite(
   return { canvas: offscreen, size: logicalSize, center: logicalCenter };
 }
 
+function renderBackgroundToSprite(
+  board: BoardConfig,
+  obstacles: ObstacleData[]
+): HTMLCanvasElement {
+  const offscreen = document.createElement('canvas');
+  offscreen.width = board.width;
+  offscreen.height = board.height;
+  const ctx = offscreen.getContext('2d', { alpha: false }); // Opaque optimization
+  if (!ctx) return offscreen;
+
+  // 1. Draw Board Chassis & Blueprint Grid
+  ctx.fillStyle = '#111722';
+  ctx.fillRect(0, 0, board.width, board.height);
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(51, 65, 85, 0.28)';
+  ctx.lineWidth = 1;
+  const gridStep = board.gridSize || 25;
+  ctx.beginPath();
+  for (let x = 0; x <= board.width; x += gridStep) {
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, board.height);
+  }
+  for (let y = 0; y <= board.height; y += gridStep) {
+    ctx.moveTo(0, y);
+    ctx.lineTo(board.width, y);
+  }
+  ctx.stroke();
+
+  // Major coordinate grid lines every 100px
+  ctx.strokeStyle = 'rgba(148, 163, 184, 0.12)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  for (let x = 0; x <= board.width; x += 100) {
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, board.height);
+  }
+  for (let y = 0; y <= board.height; y += 100) {
+    ctx.moveTo(0, y);
+    ctx.lineTo(board.width, y);
+  }
+  ctx.stroke();
+
+  // Staging / Inventory Tray divider
+  const stagingY = 520;
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+  ctx.fillRect(0, stagingY, board.width, board.height - stagingY);
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.22)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([12, 6]);
+  ctx.beginPath();
+  ctx.moveTo(0, stagingY);
+  ctx.lineTo(board.width, stagingY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Staging Tray Label
+  ctx.font = '600 12px Rajdhani, system-ui, sans-serif';
+  ctx.fillStyle = 'rgba(148, 163, 184, 0.45)';
+  ctx.fillText('ASSEMBLY INVENTORY TRAY', 24, stagingY + 24);
+
+  // Chassis Outer Border
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(2, 2, board.width - 4, board.height - 4);
+
+  // Corner Brackets
+  const cbSize = 24;
+  ctx.strokeStyle = '#64748b';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(4, 4, cbSize, cbSize);
+  ctx.strokeRect(board.width - cbSize - 4, 4, cbSize, cbSize);
+  ctx.strokeRect(4, board.height - cbSize - 4, cbSize, cbSize);
+  ctx.strokeRect(board.width - cbSize - 4, board.height - cbSize - 4, cbSize, cbSize);
+
+  // 2. Draw Obstacles
+  for (const obs of obstacles) {
+    if (!obs.visible) continue;
+    ctx.save();
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
+
+    // Hazard stripes
+    ctx.strokeStyle = 'rgba(239, 68, 68, 0.35)';
+    ctx.lineWidth = 3;
+    for (let i = -obs.height; i < obs.width + obs.height; i += 16) {
+      ctx.beginPath();
+      ctx.moveTo(obs.x + i, obs.y);
+      ctx.lineTo(obs.x + i + 12, obs.y + obs.height);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  return offscreen;
+}
+
 export const GearCanvas: React.FC<GearCanvasProps> = ({
   board,
   gears,
@@ -212,6 +312,9 @@ export const GearCanvas: React.FC<GearCanvasProps> = ({
   const spriteCacheRef = useRef<
     Map<string, { canvas: HTMLCanvasElement; size: number; center: number }>
   >(new Map());
+
+  // Cached background for zero-overhead grid and obstacle rendering
+  const bgCacheRef = useRef<HTMLCanvasElement | null>(null);
 
   // Cached layout metrics to avoid DOM layout thrashing during 60fps render and touch drag
   const layoutRef = useRef({
@@ -313,6 +416,10 @@ export const GearCanvas: React.FC<GearCanvasProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    bgCacheRef.current = null;
+  }, [board.width, board.height, board.gridSize, obstacles]);
+
   // Set up resize observer and window resize listeners
   useEffect(() => {
     const container = containerRef.current;
@@ -350,7 +457,7 @@ export const GearCanvas: React.FC<GearCanvasProps> = ({
     };
   }, [updateLayoutMetrics]);
 
-  // Non-passive touch cancellation to eliminate touch scroll lag on Android Chrome
+  // Non-passive touch cancellation and native pointer move
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -361,14 +468,31 @@ export const GearCanvas: React.FC<GearCanvasProps> = ({
       }
     };
 
+    const handleNativePointerMove = (e: PointerEvent) => {
+      if (!dragRef.current || dragRef.current.pointerId !== e.pointerId) return;
+      const { x, y } = clientToBoard(e.clientX, e.clientY);
+
+      dragRef.current.currentX = x - dragRef.current.offsetX;
+      dragRef.current.currentY = y - dragRef.current.offsetY;
+
+      // Throttle drag audio ticks
+      const now = performance.now();
+      if (now - lastDragSoundRef.current > 110) {
+        lastDragSoundRef.current = now;
+        sound.playGearDrag();
+      }
+    };
+
     canvas.addEventListener('touchstart', preventTouchGestures, { passive: false });
     canvas.addEventListener('touchmove', preventTouchGestures, { passive: false });
+    canvas.addEventListener('pointermove', handleNativePointerMove, { passive: true });
 
     return () => {
       canvas.removeEventListener('touchstart', preventTouchGestures);
       canvas.removeEventListener('touchmove', preventTouchGestures);
+      canvas.removeEventListener('pointermove', handleNativePointerMove);
     };
-  }, []);
+  }, [clientToBoard]);
 
   // Main 60FPS / 120FPS Render Loop
   const render = useCallback((timestamp: number) => {
@@ -425,92 +549,11 @@ export const GearCanvas: React.FC<GearCanvasProps> = ({
     ctx.translate(offsetX, offsetY);
     ctx.scale(scale, scale);
 
-    // 1. Draw Board Chassis & Blueprint Grid
-    ctx.fillStyle = '#111722';
-    ctx.fillRect(0, 0, board.width, board.height);
-
-    // Grid lines
-    ctx.strokeStyle = 'rgba(51, 65, 85, 0.28)';
-    ctx.lineWidth = 1;
-    const gridStep = board.gridSize || 25;
-    ctx.beginPath();
-    for (let x = 0; x <= board.width; x += gridStep) {
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, board.height);
+    // 1 & 2. Draw Cached Board Chassis, Grid, and Obstacles
+    if (!bgCacheRef.current) {
+      bgCacheRef.current = renderBackgroundToSprite(board, obstacles);
     }
-    for (let y = 0; y <= board.height; y += gridStep) {
-      ctx.moveTo(0, y);
-      ctx.lineTo(board.width, y);
-    }
-    ctx.stroke();
-
-    // Major coordinate grid lines every 100px
-    ctx.strokeStyle = 'rgba(148, 163, 184, 0.12)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    for (let x = 0; x <= board.width; x += 100) {
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, board.height);
-    }
-    for (let y = 0; y <= board.height; y += 100) {
-      ctx.moveTo(0, y);
-      ctx.lineTo(board.width, y);
-    }
-    ctx.stroke();
-
-    // Staging / Inventory Tray divider
-    const stagingY = 520;
-    ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
-    ctx.fillRect(0, stagingY, board.width, board.height - stagingY);
-    ctx.strokeStyle = 'rgba(56, 189, 248, 0.22)';
-    ctx.lineWidth = 2;
-    ctx.setLineDash([12, 6]);
-    ctx.beginPath();
-    ctx.moveTo(0, stagingY);
-    ctx.lineTo(board.width, stagingY);
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    // Staging Tray Label
-    ctx.font = '600 12px Rajdhani, system-ui, sans-serif';
-    ctx.fillStyle = 'rgba(148, 163, 184, 0.45)';
-    ctx.fillText('ASSEMBLY INVENTORY TRAY', 24, stagingY + 24);
-
-    // Chassis Outer Border
-    ctx.strokeStyle = '#334155';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(2, 2, board.width - 4, board.height - 4);
-
-    // Corner Brackets
-    const cbSize = 24;
-    ctx.strokeStyle = '#64748b';
-    ctx.lineWidth = 3;
-    ctx.strokeRect(4, 4, cbSize, cbSize);
-    ctx.strokeRect(board.width - cbSize - 4, 4, cbSize, cbSize);
-    ctx.strokeRect(4, board.height - cbSize - 4, cbSize, cbSize);
-    ctx.strokeRect(board.width - cbSize - 4, board.height - cbSize - 4, cbSize, cbSize);
-
-    // 2. Draw Obstacles
-    for (const obs of obstacles) {
-      if (!obs.visible) continue;
-      ctx.save();
-      ctx.fillStyle = '#1e293b';
-      ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-      ctx.strokeStyle = '#ef4444';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
-
-      // Hazard stripes
-      ctx.strokeStyle = 'rgba(239, 68, 68, 0.35)';
-      ctx.lineWidth = 3;
-      for (let i = -obs.height; i < obs.width + obs.height; i += 16) {
-        ctx.beginPath();
-        ctx.moveTo(obs.x + i, obs.y);
-        ctx.lineTo(obs.x + i + 12, obs.y + obs.height);
-        ctx.stroke();
-      }
-      ctx.restore();
-    }
+    ctx.drawImage(bgCacheRef.current, 0, 0);
 
     // 3. Draw Hint Ghost Placements
     if (activeHint && activeHint.targetX !== undefined && activeHint.targetY !== undefined) {
@@ -727,22 +770,6 @@ export const GearCanvas: React.FC<GearCanvasProps> = ({
     }
   };
 
-  // Touch / Pointer Move (Ultra-smooth, zero layout thrashing)
-  const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (!dragRef.current || dragRef.current.pointerId !== e.pointerId) return;
-    const { x, y } = clientToBoard(e.clientX, e.clientY);
-
-    dragRef.current.currentX = x - dragRef.current.offsetX;
-    dragRef.current.currentY = y - dragRef.current.offsetY;
-
-    // Throttle drag audio ticks
-    const now = performance.now();
-    if (now - lastDragSoundRef.current > 110) {
-      lastDragSoundRef.current = now;
-      sound.playGearDrag();
-    }
-  };
-
   // Touch / Pointer Up
   const handlePointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!dragRef.current || dragRef.current.pointerId !== e.pointerId) return;
@@ -768,7 +795,6 @@ export const GearCanvas: React.FC<GearCanvasProps> = ({
         ref={canvasRef}
         id="gearworks-main-canvas"
         onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
         className="absolute inset-0 block cursor-grab active:cursor-grabbing touch-none select-none"
