@@ -131,48 +131,44 @@ export default function App() {
         const ach = { ...prev.achievements };
         const now = new Date().toISOString();
 
-        // 1. first_turn
-        if (completedLevelId === 1 && !ach.first_turn?.unlocked) {
-          ach.first_turn = { unlocked: true, unlockedAt: now };
+        // Count completed levels
+        const levels = Object.values(prev.playerProgress.levels) as LevelProgress[];
+        const levelsCompleted = levels.filter(l => l.completed).length + 1;
+        const threeStarLevels = levels.filter(l => l.stars === 3).length + (starsEarned === 3 ? 1 : 0);
+
+        // 1. first_mechanism
+        if (levelsCompleted >= 1 && !ach.first_mechanism?.unlocked) {
+          ach.first_mechanism = { unlocked: true, unlockedAt: now };
         }
-        // 2. perfect_mesh
-        if (starsEarned === 3 && !ach.perfect_mesh?.unlocked) {
-          ach.perfect_mesh = { unlocked: true, unlockedAt: now };
-        }
-        // 3. flawless_calibration
-        if (invalidPlacements === 0 && !ach.flawless_calibration?.unlocked) {
-          ach.flawless_calibration = { unlocked: true, unlockedAt: now };
-        }
-        // 4. speed_machinist
-        if (timeRemaining >= 60 && !ach.speed_machinist?.unlocked) {
-          ach.speed_machinist = { unlocked: true, unlockedAt: now };
-        }
-        // 5. daily_operator
-        if (isDaily && !ach.daily_operator?.unlocked) {
-          ach.daily_operator = { unlocked: true, unlockedAt: now };
+        
+        // 2. three_star
+        if (threeStarLevels >= 1 && !ach.three_star?.unlocked) {
+          ach.three_star = { unlocked: true, unlockedAt: now };
         }
 
-        // 6. apprentice_clockmaker (all 10 levels of world 1)
-        const allCompleted = Array.from({ length: 10 }, (_, i) => i + 1).every(
-          (num) => prev.playerProgress.levels[num]?.completed || num === completedLevelId
-        );
-        if (allCompleted && !ach.apprentice_clockmaker?.unlocked) {
-          ach.apprentice_clockmaker = { unlocked: true, unlockedAt: now };
+        // 3. perfect_fit
+        if (invalidPlacements === 0 && !ach.perfect_fit?.unlocked) {
+          ach.perfect_fit = { unlocked: true, unlockedAt: now };
+        }
+        
+        // 4. speed_demon
+        if (timeRemaining >= 120 && !ach.speed_demon?.unlocked) {
+          ach.speed_demon = { unlocked: true, unlockedAt: now };
         }
 
-        // 7. gear_virtuoso (30 stars)
-        let totalStars = 0;
-        for (let i = 1; i <= 100; i++) {
-          const s = i === completedLevelId ? Math.max(prev.playerProgress.levels[i]?.stars || 0, starsEarned) : (prev.playerProgress.levels[i]?.stars || 0);
-          totalStars += s;
-        }
-        if (totalStars >= 30 && !ach.gear_virtuoso?.unlocked) {
-          ach.gear_virtuoso = { unlocked: true, unlockedAt: now };
+        // 5. five_levels
+        if (levelsCompleted >= 5 && !ach.five_levels?.unlocked) {
+          ach.five_levels = { unlocked: true, unlockedAt: now };
         }
 
-        // 8. kinetic_streak (3 day daily streak)
-        if (prev.statistics.currentDailyStreak >= 3 && !ach.kinetic_streak?.unlocked) {
-          ach.kinetic_streak = { unlocked: true, unlockedAt: now };
+        // 6. ten_levels
+        if (levelsCompleted >= 10 && !ach.ten_levels?.unlocked) {
+          ach.ten_levels = { unlocked: true, unlockedAt: now };
+        }
+
+        // 7. perfectionist
+        if (threeStarLevels >= 5 && !ach.perfectionist?.unlocked) {
+          ach.perfectionist = { unlocked: true, unlockedAt: now };
         }
 
         return {
@@ -203,13 +199,18 @@ export default function App() {
           id: 999, 
           name: 'Custom Level', 
           levelNumber: 999, 
+          worldId: 1,
+          difficulty: 'medium',
           gears: customLevel.gears, 
           board: customLevel.board, 
           metadata: { description: 'Custom', tutorial: false, dailyEligible: false, challengeEligible: false, tags: [] }, 
           obstacles: customLevel.obstacles || [], 
-          rules: { timed: false, timeLimit: 0, moveLimit: 0 }, 
+          rules: { timed: false, timeLimit: 0, allowUndo: true, allowReset: true, allowHints: true, allowPause: true }, 
           targets: [], 
-          hints: [] 
+          hints: [],
+          solution: { minimumMoves: 1, multipleSolutions: false, connectionOrder: [], placements: [] },
+          scoring: { baseScore: 1000, timeMultiplier: 1, moveMultiplier: 1, invalidPlacementPenalty: 1, hintPenalty: 1 },
+          stars: { three: { maxMoves: 5 }, two: { maxMoves: 10 }, one: { maxMoves: 15 } }
         });
       } else {
         loaded = loadLevel(levelId);
