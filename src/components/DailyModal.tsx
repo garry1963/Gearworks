@@ -50,7 +50,7 @@ export const DailyModal: React.FC<DailyModalProps> = ({
         </div>
 
         <p className="text-xs text-slate-300 leading-relaxed my-2 text-left bg-slate-950/60 p-3.5 rounded-2xl border border-slate-800">
-          A unique mechanism is synchronized worldwide each day. Complete today's assembly to increment your consecutive daily streak and earn mechanic honors.
+          A unique mechanism is synchronized worldwide each day with zero repeats within any 30-day rolling period. Complete today's assembly to increment your consecutive daily streak and earn mechanic honors.
         </p>
 
         {/* Streak Stats */}

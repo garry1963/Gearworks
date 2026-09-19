@@ -225,9 +225,12 @@ export default function App() {
       setCurrentScreen('game');
       setActiveModal(null);
 
+      const activeId = loaded.level.id;
+      setCurrentLevelId(activeId);
+
       // Record attempt in statistics
       setSaveData((prev) => {
-        const lvlProg = prev.playerProgress.levels[levelId] || {
+        const lvlProg = prev.playerProgress.levels[activeId] || {
           unlocked: true,
           completed: false,
           stars: 0,
@@ -242,10 +245,10 @@ export default function App() {
           ...prev,
           playerProgress: {
             ...prev.playerProgress,
-            currentLevel: levelId,
+            currentLevel: mode === 'campaign' ? levelId : prev.playerProgress.currentLevel,
             levels: {
               ...prev.playerProgress.levels,
-              [levelId]: {
+              [activeId]: {
                 ...lvlProg,
                 attempts: lvlProg.attempts + 1,
               },
