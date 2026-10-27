@@ -154,6 +154,30 @@ export function validateLevel(level: LevelData): ValidationReport {
     errors.push('Rule 11 Failed: Level time limit must be at least 10 seconds.');
   }
 
+  // 12. Exact Cog Tray Rule: Only allow the exact number of cogs to successfully complete the puzzle in the assembly inventory tray
+  const movableGears = level.gears.filter((g) => g.movable);
+  const solutionPlacements = level.solution?.placements || [];
+
+  if (solutionPlacements.length > 0) {
+    if (movableGears.length !== solutionPlacements.length) {
+      errors.push(
+        `Rule 12 Failed: Assembly inventory tray contains ${movableGears.length} cogs, but solution requires exactly ${solutionPlacements.length}. No extra cogs are allowed.`
+      );
+    }
+    const placementIds = new Set(solutionPlacements.map((p) => p.gearId));
+    for (const g of movableGears) {
+      if (!placementIds.has(g.id)) {
+        errors.push(
+          `Rule 12 Failed: Movable cog '${g.id}' in inventory tray is not used in the solution. No extra cogs are allowed.`
+        );
+      }
+    }
+  } else if (level.solution?.minimumMoves && movableGears.length > level.solution.minimumMoves) {
+    errors.push(
+      `Rule 12 Failed: Assembly inventory tray contains ${movableGears.length} cogs, but minimum moves is ${level.solution.minimumMoves}. No extra cogs are allowed.`
+    );
+  }
+
   return {
     levelId: level.id,
     levelName: level.name,

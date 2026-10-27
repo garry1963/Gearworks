@@ -9,15 +9,74 @@ export interface LoadedLevelResult {
 }
 
 /**
- * Loads a level by ID and initializes runtime gear states
+ * Sanitizes level gears so that ONLY the exact number of cogs required to solve
+ * the puzzle exist in the assembly inventory tray. No extra or distractor cogs are allowed.
+ */
+export function enforceExactCogInventory(rawLevel: LevelData): LevelData {
+  const solutionPlacements = rawLevel.solution?.placements || [];
+  const requiredPlacementIds = new Set(solutionPlacements.map((p) => p.gearId));
+
+  const staticGears = rawLevel.gears.filter((g) => !g.movable);
+  const originalMovables = rawLevel.gears.filter((g) => g.movable);
+
+  let allowedMovableGears = originalMovables;
+
+  if (requiredPlacementIds.size > 0) {
+    // Keep ONLY movable gears that are specifically in the official solution placements
+    allowedMovableGears = originalMovables.filter((g) => requiredPlacementIds.has(g.id));
+  } else if (rawLevel.solution?.minimumMoves && rawLevel.solution.minimumMoves > 0) {
+    // Limit strictly to minimumMoves if no explicit placements array
+    allowedMovableGears = originalMovables.slice(0, rawLevel.solution.minimumMoves);
+  }
+
+  // If any extra cogs were pruned or spacing needs readjustment, ensure they are neatly arrayed in the inventory tray
+  const hadExtraCogs = allowedMovableGears.length !== originalMovables.length;
+  const boardWidth = rawLevel.board?.width || 1200;
+  const trayCount = allowedMovableGears.length;
+  const step = Math.min(130, Math.floor((boardWidth - 100) / Math.max(1, trayCount + 1)));
+
+  const sanitizedMovables = allowedMovableGears.map((gear, idx) => {
+    const defaultTrayX = Math.round(50 + (idx + 1) * step);
+    const defaultTrayY = Math.max(560, (rawLevel.board?.height || 700) - 100);
+
+    const initialX = hadExtraCogs ? defaultTrayX : (gear.initialX ?? gear.x ?? defaultTrayX);
+    const initialY = gear.initialY && gear.initialY >= 520 ? gear.initialY : defaultTrayY;
+
+    return {
+      ...gear,
+      initialX,
+      initialY,
+      x: initialX,
+      y: initialY,
+      movable: true,
+    };
+  });
+
+  const updatedSolution = rawLevel.solution
+    ? {
+        ...rawLevel.solution,
+        minimumMoves: allowedMovableGears.length > 0 ? allowedMovableGears.length : rawLevel.solution.minimumMoves,
+      }
+    : undefined;
+
+  return {
+    ...rawLevel,
+    gears: [...staticGears, ...sanitizedMovables],
+    solution: updatedSolution as any,
+  };
+}
+
+/**
+ * Loads a level by ID and initializes runtime gear states with exact tray cogs
  */
 export function loadLevel(levelId: number): LoadedLevelResult | null {
-  const level = registeredLevels[levelId];
-  if (!level) {
+  const rawLevel = registeredLevels[levelId];
+  if (!rawLevel) {
     console.warn(`Level ${levelId} is not installed or available.`);
     return null;
   }
 
+  const level = enforceExactCogInventory(rawLevel);
   const validation = validateLevel(level);
 
   // Initialize runtime gears
@@ -148,12 +207,14 @@ export function getDailyLevel(dateStr: string): LoadedLevelResult {
 }
 
 /**
- * Loads a custom player-created puzzle into runtime gears and validation
+ * Loads a custom player-created puzzle into runtime gears and validation,
+ * ensuring the assembly inventory tray contains only the exact required cogs.
  */
 export function loadCustomLevel(customLevel: LevelData): LoadedLevelResult {
-  const validation = validateLevel(customLevel);
+  const level = enforceExactCogInventory(customLevel);
+  const validation = validateLevel(level);
 
-  const runtimeGears: RuntimeGear[] = customLevel.gears.map((g) => ({
+  const runtimeGears: RuntimeGear[] = level.gears.map((g) => ({
     ...g,
     currentX: g.initialX ?? g.x,
     currentY: g.initialY ?? g.y,
@@ -167,7 +228,7 @@ export function loadCustomLevel(customLevel: LevelData): LoadedLevelResult {
   }));
 
   return {
-    level: customLevel,
+    level,
     validation,
     runtimeGears,
   };
