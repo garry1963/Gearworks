@@ -1,0 +1,403 @@
+{
+  "id": 54,
+  "worldId": 6,
+  "levelNumber": 4,
+  "name": "Heavy Metal",
+  "difficulty": "hard",
+  "concept": "heavy_gear",
+  "isWorldBoss": false,
+  "board": {
+    "width": 1200,
+    "height": 700,
+    "gridSize": 25,
+    "snapToGrid": true
+  },
+  "rules": {
+    "timed": true,
+    "timeLimit": 105,
+    "allowUndo": true,
+    "allowReset": true,
+    "allowHints": true,
+    "allowPause": true
+  },
+  "gears": [
+    {
+      "id": "power_01",
+      "type": "powered",
+      "name": "Drive Motor",
+      "x": 120,
+      "y": 260,
+      "radius": 48,
+      "teeth": 14,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": true,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "titanium"
+    },
+    {
+      "id": "gear_01",
+      "type": "standard",
+      "name": "Transfer Cog 1",
+      "x": 350,
+      "y": 540,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 350,
+      "initialY": 540
+    },
+    {
+      "id": "gear_02",
+      "type": "standard",
+      "name": "Transfer Cog 2",
+      "x": 460,
+      "y": 540,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 460,
+      "initialY": 540
+    },
+    {
+      "id": "gear_03",
+      "type": "standard",
+      "name": "Transfer Cog 3",
+      "x": 570,
+      "y": 540,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 570,
+      "initialY": 540
+    },
+    {
+      "id": "gear_04",
+      "type": "standard",
+      "name": "Transfer Cog 4",
+      "x": 680,
+      "y": 540,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 680,
+      "initialY": 540
+    },
+    {
+      "id": "gear_05",
+      "type": "standard",
+      "name": "Transfer Cog 5",
+      "x": 790,
+      "y": 540,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 790,
+      "initialY": 540
+    },
+    {
+      "id": "gear_06",
+      "type": "standard",
+      "name": "Transfer Cog 6",
+      "x": 350,
+      "y": 640,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 350,
+      "initialY": 640
+    },
+    {
+      "id": "gear_07",
+      "type": "standard",
+      "name": "Transfer Cog 7",
+      "x": 460,
+      "y": 640,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 460,
+      "initialY": 640
+    },
+    {
+      "id": "gear_08",
+      "type": "standard",
+      "name": "Transfer Cog 8",
+      "x": 570,
+      "y": 640,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": true,
+      "powered": false,
+      "target": false,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "steel",
+      "initialX": 570,
+      "initialY": 640
+    },
+    {
+      "id": "target_01",
+      "type": "fixed",
+      "name": "Kinetic Output 1",
+      "x": 388,
+      "y": 172,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": false,
+      "target": true,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "brass"
+    },
+    {
+      "id": "target_02",
+      "type": "fixed",
+      "name": "Kinetic Output 2",
+      "x": 564,
+      "y": 348,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": false,
+      "target": true,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "brass"
+    },
+    {
+      "id": "target_03",
+      "type": "fixed",
+      "name": "Kinetic Output 3",
+      "x": 740,
+      "y": 260,
+      "radius": 44,
+      "teeth": 13,
+      "rotation": 0,
+      "rotationSpeed": 1,
+      "movable": false,
+      "powered": false,
+      "target": true,
+      "locked": false,
+      "snapDistance": 50,
+      "material": "brass"
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "obs_54_1",
+      "x": 375,
+      "y": 295,
+      "width": 26,
+      "height": 85,
+      "type": "wall",
+      "collision": true,
+      "visible": true
+    },
+    {
+      "id": "obs_54_2",
+      "x": 550,
+      "y": 135,
+      "width": 26,
+      "height": 85,
+      "type": "wall",
+      "collision": true,
+      "visible": true
+    }
+  ],
+  "targets": [
+    {
+      "id": "req_target_01",
+      "gearId": "target_01",
+      "required": true,
+      "mustRotate": true,
+      "requiredDirection": "any"
+    },
+    {
+      "id": "req_target_02",
+      "gearId": "target_02",
+      "required": true,
+      "mustRotate": true,
+      "requiredDirection": "any"
+    },
+    {
+      "id": "req_target_03",
+      "gearId": "target_03",
+      "required": true,
+      "mustRotate": true,
+      "requiredDirection": "any"
+    }
+  ],
+  "solution": {
+    "minimumMoves": 8,
+    "multipleSolutions": false,
+    "placements": [
+      {
+        "gearId": "gear_01",
+        "x": 212,
+        "y": 260
+      },
+      {
+        "gearId": "gear_02",
+        "x": 300,
+        "y": 260
+      },
+      {
+        "gearId": "gear_03",
+        "x": 300,
+        "y": 172
+      },
+      {
+        "gearId": "gear_04",
+        "x": 388,
+        "y": 260
+      },
+      {
+        "gearId": "gear_05",
+        "x": 476,
+        "y": 260
+      },
+      {
+        "gearId": "gear_06",
+        "x": 476,
+        "y": 348
+      },
+      {
+        "gearId": "gear_07",
+        "x": 564,
+        "y": 260
+      },
+      {
+        "gearId": "gear_08",
+        "x": 652,
+        "y": 260
+      }
+    ],
+    "connectionOrder": [
+      "power_01",
+      "gear_01",
+      "gear_02",
+      "gear_03",
+      "gear_04",
+      "gear_05",
+      "gear_06",
+      "gear_07",
+      "gear_08",
+      "target_01",
+      "target_02",
+      "target_03"
+    ]
+  },
+  "scoring": {
+    "baseScore": 2140,
+    "timeMultiplier": 10,
+    "moveMultiplier": 50,
+    "invalidPlacementPenalty": 25,
+    "hintPenalty": 100
+  },
+  "stars": {
+    "three": {
+      "maxMoves": 8,
+      "minimumTimeRemaining": 42,
+      "maxHints": 0
+    },
+    "two": {
+      "maxMoves": 10,
+      "minimumTimeRemaining": 21
+    },
+    "one": {
+      "completionRequired": true
+    }
+  },
+  "hints": [
+    {
+      "id": 1,
+      "type": "highlightGear",
+      "gearId": "gear_01",
+      "text": "Inspect the kinetic requirements for Heavy Metal. Connect the first transfer cog to the motor."
+    },
+    {
+      "id": 2,
+      "type": "ghostPlacement",
+      "gearId": "gear_01",
+      "targetX": 212,
+      "targetY": 260,
+      "text": "Align the starter cog at (212, 260) to mesh with the power drive."
+    },
+    {
+      "id": 3,
+      "type": "connectionPath",
+      "text": "Complete the gear train along the central axis and branch outputs to drive all targets."
+    }
+  ],
+  "metadata": {
+    "tutorial": false,
+    "dailyEligible": true,
+    "challengeEligible": true,
+    "tags": [
+      "heavy_gear",
+      "hard",
+      "standard"
+    ],
+    "description": "Synchronize kinetic rotational energy for Heavy Metal."
+  }
+}
