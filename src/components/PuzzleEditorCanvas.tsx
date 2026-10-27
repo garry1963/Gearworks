@@ -605,10 +605,16 @@ export const PuzzleEditorCanvas: React.FC<PuzzleEditorCanvasProps> = ({
             setTestSolved(true);
             sound.playLevelComplete();
             if (onTestSolved) {
+              // Only capture movable gears that were actually deployed into the mechanism (not left unused in tray)
+              const participatingMovables = testRuntimeGears.filter(
+                (g) => g.movable && (g.currentY < 520 || g.isMeshed || g.isPowered || (g.connectedTo && g.connectedTo.length > 0))
+              );
               onTestSolved(
-                testRuntimeGears
-                  .filter((g) => g.movable)
-                  .map((g) => ({ gearId: g.id, x: Math.round(g.currentX), y: Math.round(g.currentY) }))
+                participatingMovables.map((g) => ({
+                  gearId: g.id,
+                  x: Math.round(g.currentX),
+                  y: Math.round(g.currentY),
+                }))
               );
             }
           }

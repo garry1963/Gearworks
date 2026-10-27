@@ -90,13 +90,22 @@ export const PuzzleEditorScreen: React.FC<PuzzleEditorScreenProps> = ({
 
   // Handle Save
   const handleSavePuzzle = useCallback(() => {
+    // If solution placements exist, enforce exact cogs in tray
+    const solutionPlacements = puzzle.solution?.placements || [];
+    let sanitizedGears = puzzle.gears;
+    if (solutionPlacements.length > 0) {
+      const placementIds = new Set(solutionPlacements.map((p) => p.gearId));
+      sanitizedGears = puzzle.gears.filter((g) => !g.movable || placementIds.has(g.id));
+    }
+
     const updated: CustomPuzzle = {
       ...puzzle,
+      gears: sanitizedGears,
       updatedAt: new Date().toISOString(),
     };
     onSave(updated);
     sound.playLevelComplete();
-    setSaveToast('Puzzle saved successfully!');
+    setSaveToast('Puzzle saved successfully with exact cog tray!');
     setTimeout(() => setSaveToast(null), 3000);
   }, [puzzle, onSave]);
 
@@ -595,16 +604,42 @@ export const PuzzleEditorScreen: React.FC<PuzzleEditorScreenProps> = ({
   const handleCommitSolution = useCallback(() => {
     if (!solvedPlacements) return;
     sound.playLevelComplete();
-    setPuzzle((prev) => ({
-      ...prev,
-      isVerified: true,
-      solution: {
-        minimumMoves: solvedPlacements.length,
-        multipleSolutions: true,
-        placements: solvedPlacements,
-      },
-    }));
-    setSaveToast('Solution verified and saved as official solution!');
+    setPuzzle((prev) => {
+      const neededIds = new Set(solvedPlacements.map((p) => p.gearId));
+      // Keep static gears and ONLY the movable gears that participate in the solution
+      const prunedGears = prev.gears.filter((g) => !g.movable || neededIds.has(g.id));
+
+      // Auto-arrange the remaining exact movable cogs evenly in the assembly tray
+      const movables = prunedGears.filter((g) => g.movable);
+      const trayY = 600;
+      const totalWidth = prev.board.width;
+      const step = Math.min(140, (totalWidth - 100) / Math.max(1, movables.length + 1));
+
+      const rearrangedGears = prunedGears.map((g) => {
+        if (!g.movable) return g;
+        const idx = movables.findIndex((mg) => mg.id === g.id);
+        const newX = Math.round(50 + (idx + 1) * step);
+        return {
+          ...g,
+          x: newX,
+          y: trayY,
+          initialX: newX,
+          initialY: trayY,
+        };
+      });
+
+      return {
+        ...prev,
+        gears: rearrangedGears,
+        isVerified: true,
+        solution: {
+          minimumMoves: solvedPlacements.length,
+          multipleSolutions: true,
+          placements: solvedPlacements,
+        },
+      };
+    });
+    setSaveToast('Solution verified! Extra tray cogs removed to enforce exact fit.');
     setTimeout(() => setSaveToast(null), 3500);
   }, [solvedPlacements]);
 
@@ -739,7 +774,17 @@ export const PuzzleEditorScreen: React.FC<PuzzleEditorScreenProps> = ({
           <button
             onClick={() => {
               sound.playGearSelect();
-              onPlayInGame(puzzle);
+              // Enforce exact cog inventory tray when launching in game
+              const solutionPlacements = puzzle.solution?.placements || [];
+              let sanitizedGears = puzzle.gears;
+              if (solutionPlacements.length > 0) {
+                const placementIds = new Set(solutionPlacements.map((p) => p.gearId));
+                sanitizedGears = puzzle.gears.filter((g) => !g.movable || placementIds.has(g.id));
+              }
+              onPlayInGame({
+                ...puzzle,
+                gears: sanitizedGears,
+              });
             }}
             title="Play in standard game screen"
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white text-xs font-bold shadow-md shadow-emerald-600/30 transition active:scale-95"
@@ -802,6 +847,38 @@ export const PuzzleEditorScreen: React.FC<PuzzleEditorScreenProps> = ({
               )}
               <span>Verified Solvable: {validation.solutionSolvesLevel ? 'Yes' : 'Not yet tested'}</span>
             </div>
+
+            {/* Exact Cog Tray Rule Status */}
+            <div className="flex items-center gap-2">
+              {puzzle.solution?.placements && puzzle.solution.placements.length > 0 &&
+              puzzle.gears.filter((g) => g.movable).length === puzzle.solution.placements.length ? (
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+              ) : (
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+              )}
+              <span>
+                Exact Cog Fit: {puzzle.gears.filter((g) => g.movable).length} in tray / {puzzle.solution?.placements?.length || 0} required
+              </span>
+            </div>
+
+            {puzzle.solution?.placements && puzzle.solution.placements.length > 0 &&
+            puzzle.gears.filter((g) => g.movable).length > puzzle.solution.placements.length && (
+              <button
+                onClick={() => {
+                  sound.playGearSelect();
+                  const placementIds = new Set(puzzle.solution!.placements.map((p) => p.gearId));
+                  setPuzzle((prev) => ({
+                    ...prev,
+                    gears: prev.gears.filter((g) => !g.movable || placementIds.has(g.id)),
+                  }));
+                  setSaveToast('Extra cogs trimmed to exact solution requirements!');
+                  setTimeout(() => setSaveToast(null), 3000);
+                }}
+                className="w-full py-1 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 font-semibold text-[11px] hover:bg-amber-500/30 transition text-center"
+              >
+                Trim Extra Cogs from Tray ({puzzle.gears.filter((g) => g.movable).length - puzzle.solution.placements.length} extra)
+              </button>
+            )}
 
             {validation.errors.map((err, i) => (
               <div key={i} className="p-1.5 rounded bg-red-950/50 border border-red-800/60 text-red-300 text-[11px]">

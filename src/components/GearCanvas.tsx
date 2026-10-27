@@ -136,7 +136,7 @@ function renderBackgroundToSprite(board: BoardConfig, obstacles: ObstacleData[])
   ctx.setLineDash([]);
 
   ctx.font = '600 12px Rajdhani, system-ui, sans-serif'; ctx.fillStyle = 'rgba(148, 163, 184, 0.45)';
-  ctx.fillText('ASSEMBLY INVENTORY TRAY', 24, stagingY + 24);
+  ctx.fillText('ASSEMBLY INVENTORY TRAY • EXACT COGS ONLY (NO EXTRAS)', 24, stagingY + 24);
 
   ctx.strokeStyle = '#334155'; ctx.lineWidth = 4; ctx.strokeRect(2, 2, board.width - 4, board.height - 4);
 

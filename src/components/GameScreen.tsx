@@ -101,6 +101,18 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     isGameOver,
   };
 
+  const completionTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const warningTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const hasTriggeredEndRef = useRef<boolean>(false);
+
+  // Clean up any pending timers on unmount
+  useEffect(() => {
+    return () => {
+      if (completionTimerRef.current) clearTimeout(completionTimerRef.current);
+      if (warningTimerRef.current) clearTimeout(warningTimerRef.current);
+    };
+  }, []);
+
   const updateUndoRedoAvailability = () => {
     setCanUndo(undoStack.current.length > 0);
     setCanRedo(redoStack.current.length > 0);
@@ -130,11 +142,13 @@ export const GameScreen: React.FC<GameScreenProps> = ({
         })
       );
 
-      // Check level completion
-      if (result.isLevelComplete && !statsRef.current.isGameOver) {
+      // Check level completion safely
+      if (result.isLevelComplete && !statsRef.current.isGameOver && !hasTriggeredEndRef.current) {
+        hasTriggeredEndRef.current = true;
         setIsGameOver(true);
         sound.playGearMesh();
-        setTimeout(() => {
+        if (completionTimerRef.current) clearTimeout(completionTimerRef.current);
+        completionTimerRef.current = setTimeout(() => {
           onLevelComplete({
             timeRemaining: statsRef.current.timeRemaining,
             moves: statsRef.current.moves,
@@ -152,35 +166,43 @@ export const GameScreen: React.FC<GameScreenProps> = ({
     evaluateMechanism(gears);
   }, []);
 
-  // Timer countdown hook
+  // Timer countdown hook (pure decrement, strictly side-effect free)
   useEffect(() => {
     if (!levelData.rules.timed || isGameOver) return;
 
     const timer = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          setIsGameOver(true);
-          sound.playLevelFailed();
-          onLevelFailed({ moves, invalidPlacements });
-          return 0;
-        }
-
-        // Warnings at 30s and 10s
-        if (prev === 31 || prev === 11) {
-          setWarningFlash(true);
-          setTimeout(() => setWarningFlash(false), 800);
-          sound.playTimerWarning();
-        } else if (prev <= 10) {
-          sound.playTimerWarning();
-        }
-
-        return prev - 1;
-      });
+      setTimeRemaining((prev) => Math.max(0, prev - 1));
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [levelData.rules.timed, isGameOver, moves, invalidPlacements, onLevelFailed]);
+  }, [levelData.rules.timed, isGameOver]);
+
+  // Handle timeout and warning audio safely inside useEffect after render cycle
+  useEffect(() => {
+    if (!levelData.rules.timed || isGameOver || hasTriggeredEndRef.current) return;
+
+    if (timeRemaining <= 0) {
+      hasTriggeredEndRef.current = true;
+      setIsGameOver(true);
+      sound.playLevelFailed();
+      const failTimer = setTimeout(() => {
+        onLevelFailed({
+          moves: statsRef.current.moves,
+          invalidPlacements: statsRef.current.invalidPlacements,
+        });
+      }, 50);
+      return () => clearTimeout(failTimer);
+    }
+
+    if (timeRemaining === 30 || timeRemaining === 10) {
+      setWarningFlash(true);
+      if (warningTimerRef.current) clearTimeout(warningTimerRef.current);
+      warningTimerRef.current = setTimeout(() => setWarningFlash(false), 800);
+      sound.playTimerWarning();
+    } else if (timeRemaining < 10) {
+      sound.playTimerWarning();
+    }
+  }, [timeRemaining, levelData.rules.timed, isGameOver, onLevelFailed]);
 
   // Gear Movement handler during drag
   const handleMoveGear = useCallback((gearId: string, x: number, y: number) => {
@@ -354,6 +376,16 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   // Reset Level Action
   const handleReset = () => {
     sound.playGearSelect();
+    if (completionTimerRef.current) {
+      clearTimeout(completionTimerRef.current);
+      completionTimerRef.current = null;
+    }
+    if (warningTimerRef.current) {
+      clearTimeout(warningTimerRef.current);
+      warningTimerRef.current = null;
+    }
+    hasTriggeredEndRef.current = false;
+    setIsGameOver(false);
     undoStack.current = [];
     redoStack.current = [];
     updateUndoRedoAvailability();
@@ -447,17 +479,31 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           </div>
         </div>
 
-        {/* Center: TARGET CONNECTION COUNTER & TIMER */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700">
+        {/* Center: TARGET CONNECTION COUNTER, COGS COUNTER & TIMER */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700">
             <Radio className={`w-4 h-4 ${targetsSatisfied === totalTargets ? 'text-emerald-400 animate-pulse' : 'text-slate-400'}`} />
             <span className="text-xs font-mono font-bold">
               TARGETS {targetsSatisfied}/{totalTargets}
             </span>
           </div>
 
+          {/* Exact Tray Cog Placement Status */}
           <div
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border font-mono font-bold text-sm transition-colors ${
+            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700 font-mono text-xs font-bold"
+            title="Assembly tray contains the exact cogs needed to solve the puzzle (zero extra cogs allowed)"
+          >
+            <SlidersHorizontal className="w-4 h-4 text-sky-400" />
+            <span>
+              COGS {gears.filter((g) => g.movable && (g.currentY ?? 0) < 520).length}/{gears.filter((g) => g.movable).length}
+            </span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-sky-500/15 border border-sky-400/25 text-sky-300 font-bold tracking-wider hidden md:inline">
+              EXACT FIT
+            </span>
+          </div>
+
+          <div
+            className={`flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl border font-mono font-bold text-sm transition-colors ${
               timeRemaining <= 10
                 ? 'bg-red-950/80 border-red-500 text-red-400 animate-pulse'
                 : timeRemaining <= 30
