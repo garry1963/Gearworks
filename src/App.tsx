@@ -196,21 +196,22 @@ export default function App() {
         console.log('Daily level loaded:', loaded?.level.id);
       } else if (mode === 'custom' && customLevel) {
         loaded = loadCustomLevel({ 
-          id: 999, 
-          name: 'Custom Level', 
-          levelNumber: 999, 
-          worldId: 1,
-          difficulty: 'medium',
-          gears: customLevel.gears, 
-          board: customLevel.board, 
-          metadata: { description: 'Custom', tutorial: false, dailyEligible: false, challengeEligible: false, tags: [] }, 
+          ...customLevel,
+          id: customLevel.id || 999, 
+          name: customLevel.name || 'Custom Level', 
+          levelNumber: customLevel.levelNumber || 999, 
+          worldId: customLevel.worldId || 1,
+          difficulty: customLevel.difficulty || 'medium',
+          gears: customLevel.gears || [], 
+          board: customLevel.board || { width: 1200, height: 700, gridSize: 25, snapToGrid: true }, 
+          metadata: customLevel.metadata || { description: 'Custom', tutorial: false, dailyEligible: false, challengeEligible: false, tags: [] }, 
           obstacles: customLevel.obstacles || [], 
-          rules: { timed: false, timeLimit: 0, allowUndo: true, allowReset: true, allowHints: true, allowPause: true }, 
-          targets: [], 
-          hints: [],
-          solution: { minimumMoves: 1, multipleSolutions: false, connectionOrder: [], placements: [] },
-          scoring: { baseScore: 1000, timeMultiplier: 1, moveMultiplier: 1, invalidPlacementPenalty: 1, hintPenalty: 1 },
-          stars: { three: { maxMoves: 5 }, two: { maxMoves: 10 }, one: { maxMoves: 15 } }
+          rules: customLevel.rules || { timed: false, timeLimit: 0, allowUndo: true, allowReset: true, allowHints: true, allowPause: true }, 
+          targets: customLevel.targets || [], 
+          hints: customLevel.hints || [],
+          solution: customLevel.solution || { minimumMoves: 1, multipleSolutions: false, connectionOrder: [], placements: [] },
+          scoring: customLevel.scoring || { baseScore: 1000, timeMultiplier: 1, moveMultiplier: 1, invalidPlacementPenalty: 1, hintPenalty: 1 },
+          stars: customLevel.stars || { three: { maxMoves: 5 }, two: { maxMoves: 10 }, one: { maxMoves: 15 } }
         });
       } else {
         loaded = loadLevel(levelId);
