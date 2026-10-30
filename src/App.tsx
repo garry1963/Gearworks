@@ -225,6 +225,7 @@ export default function App() {
       setLoadedResult(loaded);
       setCurrentScreen('game');
       setActiveModal(null);
+      setIsDevOpen(false);
 
       const activeId = loaded.level.id;
       setCurrentLevelId(activeId);
@@ -727,13 +728,14 @@ export default function App() {
         <LevelSelectModal
           saveData={saveData}
           onSelectLevel={(id) => startLevel(id, 'campaign')}
+          onUnlockAllLevels={handleUnlockAllLevels}
           onClose={() => setActiveModal(null)}
         />
       )}
 
       {activeModal === 'levelComplete' && loadedResult && lastScoreResult && (
         <LevelCompleteModal
-          levelNumber={loadedResult.level.levelNumber}
+          levelNumber={loadedResult.level.id}
           levelName={loadedResult.level.name}
           scoreResult={lastScoreResult}
           timeRemaining={lastCompletionStats.timeRemaining}
@@ -756,7 +758,7 @@ export default function App() {
 
       {activeModal === 'levelFailed' && loadedResult && (
         <LevelFailedModal
-          levelNumber={loadedResult.level.levelNumber}
+          levelNumber={loadedResult.level.id}
           levelName={loadedResult.level.name}
           moves={lastCompletionStats.moves}
           bestScore={saveData.playerProgress.levels[loadedResult.level.id]?.bestScore || 0}
@@ -774,7 +776,7 @@ export default function App() {
 
       {activeModal === 'pause' && loadedResult && (
         <PauseModal
-          levelNumber={loadedResult.level.levelNumber}
+          levelNumber={loadedResult.level.id}
           levelName={loadedResult.level.name}
           onResume={() => setActiveModal(null)}
           onRestart={() => startLevel(loadedResult.level.id, gameMode)}

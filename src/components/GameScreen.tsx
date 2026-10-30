@@ -75,8 +75,8 @@ export const GameScreen: React.FC<GameScreenProps> = ({
   const [totalTargets, setTotalTargets] = useState<number>(levelData.targets.length);
   const [warningFlash, setWarningFlash] = useState<boolean>(false);
 
-  // Level 1 tutorial overlay visibility
-  const isLevelOne = levelData.levelNumber === 1 || Boolean(levelData.metadata?.tutorial);
+  // Level 1 tutorial overlay visibility (only true Level 1 tutorial)
+  const isLevelOne = (levelData.id === 1 && levelData.worldId === 1) || Boolean(levelData.metadata?.tutorial);
   const [showTutorial, setShowTutorial] = useState<boolean>(() => isLevelOne);
 
   // Undo / Redo Stacks
@@ -461,7 +461,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider">
-                LEVEL {levelData.levelNumber.toString().padStart(2, '0')}
+                LEVEL {(levelData.id ?? levelData.levelNumber).toString().padStart(2, '0')}
               </span>
               {levelData.isWorldBoss && (
                 <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500/20 to-red-500/20 border border-amber-500/50 text-[10px] font-extrabold text-amber-300 uppercase tracking-wider animate-pulse">

@@ -63,7 +63,7 @@ export const DevDebugDrawer: React.FC<DevDebugDrawerProps> = ({
               </span>
             </div>
             <h2 className="text-lg font-bold text-white">
-              {currentLevel ? `Level ${currentLevel.levelNumber}: ${currentLevel.name}` : 'Engine Sandbox'}
+              {currentLevel ? `Level ${currentLevel.id ?? currentLevel.levelNumber}: ${currentLevel.name}` : 'Engine Sandbox'}
             </h2>
           </div>
         </div>
@@ -73,7 +73,7 @@ export const DevDebugDrawer: React.FC<DevDebugDrawerProps> = ({
             sound.playGearSelect();
             onClose();
           }}
-          className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition"
+          className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -84,10 +84,11 @@ export const DevDebugDrawer: React.FC<DevDebugDrawerProps> = ({
         <div className="flex items-center gap-2">
           <span className="text-xs font-mono text-slate-400">Jump Level:</span>
           <select
-            value={currentLevel?.levelNumber || 1}
+            value={currentLevel?.id ?? 1}
             onChange={(e) => {
               sound.playGearSelect();
               onSelectLevel(Number(e.target.value));
+              onClose();
             }}
             className="bg-slate-800 border border-slate-700 text-white rounded-lg px-2.5 py-1 text-xs font-mono max-w-[240px]"
           >
@@ -197,6 +198,7 @@ export const DevDebugDrawer: React.FC<DevDebugDrawerProps> = ({
                     <th className="p-3">Name</th>
                     <th className="p-3">Solves?</th>
                     <th className="p-3">Status</th>
+                    <th className="p-3 text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/80">
@@ -227,6 +229,20 @@ export const DevDebugDrawer: React.FC<DevDebugDrawerProps> = ({
                             FAIL ({rep.errors.length})
                           </span>
                         )}
+                      </td>
+                      <td className="p-3 text-right">
+                        <button
+                          onClick={() => {
+                            sound.playGearSelect();
+                            onSelectLevel(rep.levelId);
+                            onClose();
+                          }}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold shadow transition active:scale-95 cursor-pointer"
+                          title={`Play Level ${rep.levelId}`}
+                        >
+                          <Play className="w-3 h-3 fill-white" />
+                          <span>Play</span>
+                        </button>
                       </td>
                     </tr>
                   ))}

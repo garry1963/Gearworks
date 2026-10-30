@@ -180,23 +180,26 @@ export const defaultStatistics: PlayerStatistics = {
   },
 };
 
+const defaultLevelsProgress: Record<number, LevelProgress> = {};
+for (let i = 1; i <= 100; i++) {
+  defaultLevelsProgress[i] = {
+    unlocked: true,
+    completed: false,
+    stars: 0,
+    bestScore: 0,
+    bestTime: null,
+    bestMoves: null,
+    attempts: 0,
+    hintsUsed: 0,
+  };
+}
+
 export const defaultSaveData: PlayerSaveData = {
   saveVersion: CURRENT_VERSION,
   playerProgress: {
     currentWorld: 1,
     currentLevel: 1,
-    levels: {
-      1: {
-        unlocked: true,
-        completed: false,
-        stars: 0,
-        bestScore: 0,
-        bestTime: null,
-        bestMoves: null,
-        attempts: 0,
-        hintsUsed: 0,
-      },
-    },
+    levels: defaultLevelsProgress,
   },
   statistics: defaultStatistics,
   settings: defaultSettings,
@@ -260,20 +263,22 @@ export function loadSaveData(): PlayerSaveData {
       },
     };
 
-    // Ensure level 1 is always unlocked
-    if (!merged.playerProgress.levels[1]) {
-      merged.playerProgress.levels[1] = {
-        unlocked: true,
-        completed: false,
-        stars: 0,
-        bestScore: 0,
-        bestTime: null,
-        bestMoves: null,
-        attempts: 0,
-        hintsUsed: 0,
-      };
-    } else {
-      merged.playerProgress.levels[1].unlocked = true;
+    // Ensure all 100 levels are accessible and unlocked while preserving completion status
+    for (let i = 1; i <= 100; i++) {
+      if (!merged.playerProgress.levels[i]) {
+        merged.playerProgress.levels[i] = {
+          unlocked: true,
+          completed: false,
+          stars: 0,
+          bestScore: 0,
+          bestTime: null,
+          bestMoves: null,
+          attempts: 0,
+          hintsUsed: 0,
+        };
+      } else {
+        merged.playerProgress.levels[i].unlocked = true;
+      }
     }
 
     return merged;
