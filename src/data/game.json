@@ -18,7 +18,7 @@
       "theme": "Foundry",
       "levelRange": [11, 20],
       "description": "Explore torque ratios, counter-rotations, and stepped gearboxes.",
-      "unlocked": false
+      "unlocked": true
     },
     {
       "id": 3,
@@ -26,7 +26,7 @@
       "theme": "Hydroelectric Mill",
       "levelRange": [21, 30],
       "description": "Multi-path branches, differential drives, and simultaneous target synchronization.",
-      "unlocked": false
+      "unlocked": true
     },
     {
       "id": 4,
@@ -34,7 +34,7 @@
       "theme": "Watchmaker's Bench",
       "levelRange": [31, 40],
       "description": "Precision placement in constrained mechanical housings.",
-      "unlocked": false
+      "unlocked": true
     },
     {
       "id": 5,
@@ -42,7 +42,7 @@
       "theme": "Steam Vault",
       "levelRange": [41, 50],
       "description": "Navigate around stationary structural beams and barrier bulkheads.",
-      "unlocked": false
+      "unlocked": true
     },
     {
       "id": 6,
@@ -50,7 +50,7 @@
       "theme": "Automaton Lab",
       "levelRange": [51, 60],
       "description": "Heavy flywheels, one-way ratchets, and idler compound pins.",
-      "unlocked": false
+      "unlocked": true
     },
     {
       "id": 7,
@@ -58,7 +58,7 @@
       "theme": "Locomotive Yard",
       "levelRange": [61, 70],
       "description": "Intricate multi-tier linkages and compound mechanical drivetrains.",
-      "unlocked": false
+      "unlocked": true
     },
     {
       "id": 8,
@@ -66,7 +66,7 @@
       "theme": "Clocktower Spire",
       "levelRange": [71, 80],
       "description": "Demanding puzzle mechanics with strict move constraints.",
-      "unlocked": false
+      "unlocked": true
     },
     {
       "id": 9,
@@ -74,7 +74,7 @@
       "theme": "Perpetual Engine Hall",
       "levelRange": [81, 90],
       "description": "Mind-bending spatial puzzles requiring flawless deduction.",
-      "unlocked": false
+      "unlocked": true
     },
     {
       "id": 10,
@@ -82,7 +82,7 @@
       "theme": "Grand Observatory",
       "levelRange": [91, 100],
       "description": "The ultimate test of mechanical mastery and kinetic harmony.",
-      "unlocked": false
+      "unlocked": true
     }
   ]
 }
